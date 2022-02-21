@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      auto-index-creation: true
+auth:
+  jwt:
+    secretKey: ${AUTH_SECRET_KEY}
+  accessTokenExpiresInMinutes: 1
+  refreshTokenExpiresInMinutes: 2
