@@ -46,7 +46,6 @@ public class AuthenticationAppService {
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Dados inválidos.")))
                 .doOnSuccess(userStorage -> {
                     updateAccessToken(user, userStorage);
-                    userPort.updateSession(user).subscribe();
                     log.info("[APPLICATION_SERVICE] Usuário logado com sucesso. Nome de usuário: {}, Token de acesso: {}",
                             user.getUsername(), obfuscateToken(user.getAccessToken())
                     );
@@ -55,7 +54,7 @@ public class AuthenticationAppService {
     }
 
     public Mono<Void> refreshToken(final User user) {
-        log.info("[APPLICATION_SERVICE] Iniciando a renovação do token do usuário. Token de renovação: {}.",
+        log.info("[APPLICATION_SERVICE] Iniciando a renovação do login do usuário. Token de renovação: {}.",
                 obfuscateToken(user.getRefreshToken())
         );
         return userPort.findByRefreshToken(user.getRefreshToken())
@@ -65,7 +64,7 @@ public class AuthenticationAppService {
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Dados inválidos.")))
                 .doOnSuccess(userStorage -> {
                     updateAccessToken(user, userStorage);
-                    log.info("[APPLICATION_SERVICE] Sessão renovada com sucesso. Nome de usuário: {}, " +
+                    log.info("[APPLICATION_SERVICE] Login renovado com sucesso. Nome de usuário: {}, " +
                                     "Novo Token de acesso: {}",
                             user.getUsername(), obfuscateToken(user.getAccessToken())
                     );
