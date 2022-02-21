@@ -1,19 +1,32 @@
 package br.com.fiap.hmv.infra.rest.api.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@ApiModel("PostLoginResponseV1")
 @Getter
 @Builder
 public class PostLoginResponse {
 
+    @ApiModelProperty(value = "Token de acesso.", required = true)
     private final String accessToken;
+
+    @ApiModelProperty(value = "Token de renovação de acesso.", required = true)
     private final String refreshToken;
-    private final String fullName;
-    private final String taxId;
-    private final String username;
+
+    @ApiModelProperty(value = "Data de validade do token de acesso.", required = true)
     private final LocalDateTime expiresIn;
 
+    @ApiModelProperty(value = "Nome de usuário.", required = true)
+    private final String username;
+
+    @ApiModelProperty(value = "CPF.", required = true)
+    private final String taxId;
+
+    @ApiModelProperty(value = "Nome completo.", required = true)
+    private final String fullName;
 }

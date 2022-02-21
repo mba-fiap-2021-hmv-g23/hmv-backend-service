@@ -1,5 +1,7 @@
 package br.com.fiap.hmv.infra.rest.api;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +12,14 @@ import reactor.core.publisher.Mono;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@Api(hidden = true)
 @Slf4j
 @RequiredArgsConstructor
 @RestController("testApiV1")
 @RequestMapping("/v1/tests")
 public class ApiTest {
 
+    @ApiOperation(value = "Teste", hidden = true)
     @GetMapping
     @ResponseStatus(OK)
     public Mono<String> get() {

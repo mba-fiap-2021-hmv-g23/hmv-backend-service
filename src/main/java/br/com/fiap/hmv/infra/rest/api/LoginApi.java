@@ -7,6 +7,9 @@ import br.com.fiap.hmv.infra.rest.api.model.PostLoginRequest;
 import br.com.fiap.hmv.infra.rest.api.model.PostLoginResponse;
 import br.com.fiap.hmv.infra.rest.api.model.PostRefreshTokenRequest;
 import br.com.fiap.hmv.infra.rest.api.model.PostRefreshTokenResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +22,7 @@ import static br.com.fiap.hmv.infra.rest.api.mapper.UserApiModelMapper.toUser;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Api(tags = "Login")
 @Slf4j
 @RequiredArgsConstructor
 @RestController("loginApiV1")
@@ -26,10 +30,14 @@ public class LoginApi {
 
     private final AuthenticationAppService appService;
 
+    @ApiOperation(value = "Realizar Login", response = PostLoginResponse.class)
     @PostMapping(path = "/v1/login", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(OK)
-    public Mono<PostLoginResponse> post(@RequestBody PostLoginRequest request) {
-        log.info("[INFRA_REST_API POST /v1/login] Iniciando login.");
+    public Mono<PostLoginResponse> post(
+            @ApiParam("Dados para realizar login.")
+            @RequestBody PostLoginRequest request
+    ) {
+        log.info("[INFRA_REST_API POST /v1/login] Iniciando chamada ao app service para realizar login.");
         User user = toUser(request);
         return appService.login(user).thenReturn(user).map(UserApiModelMapper::toPostLoginResponse)
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/login] Finalizado com sucesso."))
@@ -38,10 +46,14 @@ public class LoginApi {
                 ));
     }
 
+    @ApiOperation(value = "Renovar Login", response = PostRefreshTokenResponse.class)
     @PostMapping(path = "/v1/refresh-token", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(OK)
-    public Mono<PostRefreshTokenResponse> refreshToken(@RequestBody PostRefreshTokenRequest request) {
-        log.info("[INFRA_REST_API POST /v1/login] Iniciando refresh-token.");
+    public Mono<PostRefreshTokenResponse> refreshToken(
+            @ApiParam("Dados para renovar login.")
+            @RequestBody PostRefreshTokenRequest request
+    ) {
+        log.info("[INFRA_REST_API POST /v1/refresh-token] Iniciando chamada ao app service para renovar login.");
         User user = toUser(request);
         return appService.refreshToken(user).thenReturn(user).map(UserApiModelMapper::toPostRefreshTokenResponse)
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/refresh-token] Finalizado com sucesso."))
