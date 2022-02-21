@@ -8,6 +8,7 @@ import br.com.fiap.hmv.infra.rest.api.model.PostUserRequest;
 import br.com.fiap.hmv.infra.rest.api.model.PostUserResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +31,13 @@ public class UserApi {
 
     private final UserAppService appService;
 
-    @ApiOperation(value = "Renovar Login", response = PostRefreshTokenResponse.class)
+    @ApiOperation(value = "Cadastrar usuário", response = PostRefreshTokenResponse.class)
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public Mono<PostUserResponse> post(@RequestBody PostUserRequest request) {
+    public Mono<PostUserResponse> post(
+            @ApiParam("Dados para cadastrar usuário.")
+            @RequestBody PostUserRequest request
+    ) {
         log.info("[INFRA_REST_API POST /v1/users] Iniciando chamada ao app service para cadastrar usuário.");
         User user = toUser(request);
         return appService.insert(user).thenReturn(user)
