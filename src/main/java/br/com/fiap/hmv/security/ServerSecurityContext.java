@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import static br.com.fiap.hmv.application.utils.ObfuscateUtils.obfuscateToken;
 import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -23,22 +24,19 @@ public class ServerSecurityContext implements ServerSecurityContextRepository {
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
-        log.info("[SECURITY] Iniciando o salvamento do contexto de segurança.");
         return Mono.empty();
     }
 
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
-        log.info("[SECURITY] Iniciando o carregamento do contexto de segurança.");
         ServerHttpRequest httpRequest = exchange.getRequest();
         String header = httpRequest.getHeaders().getFirst(AUTHORIZATION);
         if (nonNull(header)) {
             String token = header.replace("Bearer ", "");
-            log.info("[SECURITY] Localizado com header AUTHORIZATION.");
+            log.info("[SECURITY] Header AUTHORIZATION localizado. Token de acesso: {}", obfuscateToken(token));
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token, token))
                     .map(SecurityContextImpl::new);
         }
-        log.info("[SECURITY] Header AUTHORIZATION com o Bearer não localizado.");
         return Mono.error(new RuntimeException("Acesso não autorizado."));
     }
 

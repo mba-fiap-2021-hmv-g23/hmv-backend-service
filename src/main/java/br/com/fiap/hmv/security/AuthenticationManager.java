@@ -11,8 +11,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-import static br.com.fiap.hmv.application.utils.ObfuscateUtils.obfuscateToken;
-
 @Slf4j
 @RequiredArgsConstructor
 @Component("authenticationManager")
@@ -23,7 +21,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
         String accessToken = authentication.getCredentials().toString();
-        log.info("[SECURITY] Iniciando autenticação do usuário. Token de acesso: {}", obfuscateToken(accessToken));
+        log.info("[SECURITY] Iniciando validação do token de acesso.");
         LocalDateTime expiresIn = jwtService.getExpiresIn(accessToken);
         if (LocalDateTime.now().isAfter(expiresIn)) {
             return Mono.error(new UnauthorizedException("Sessão expirada."));
