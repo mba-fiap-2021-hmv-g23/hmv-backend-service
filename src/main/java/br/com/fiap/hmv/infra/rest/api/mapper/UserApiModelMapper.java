@@ -24,7 +24,7 @@ public class UserApiModelMapper {
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .password(request.getPassword())
-                .taxId(request.getTaxId())
+                .taxId(request.getTaxId().replaceAll("\\.|\\-", ""))
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class UserApiModelMapper {
         String username = null;
         String taxId = null;
         if (REGEX_TAX_ID.matcher(request.getLogin()).matches()) {
-            taxId = request.getLogin();
+            taxId = request.getLogin().replaceAll("\\.|\\-", "");
         } else {
             username = request.getLogin();
         }
