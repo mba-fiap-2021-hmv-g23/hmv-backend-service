@@ -28,7 +28,7 @@ import static java.util.Objects.nonNull;
 public class AuthenticationAppService {
 
     private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtService jwtUtils;
+    private final JwtService jwtService;
     private final UserPort userPort;
 
     @Value("${auth.accessTokenExpiresInMinutes}")
@@ -86,7 +86,7 @@ public class AuthenticationAppService {
         user.setUsername(userStorage.getUsername());
         user.setFullName(userStorage.getFullName());
         user.setRefreshToken(UUID.randomUUID().toString());
-        user.setAccessToken(jwtUtils.generateAccessToken(user));
+        user.setAccessToken(jwtService.generateAccessToken(user));
         userPort.updateSession(user).subscribe();
     }
 
