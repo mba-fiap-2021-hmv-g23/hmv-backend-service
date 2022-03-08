@@ -29,7 +29,7 @@ public class JwtService {
 
     public String generateAccessToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(user.getId())
                 .claim(CUSTOM_CLAIM_EXPIRES_IN, user.getAccessTokenExpiresIn().format(ISO_LOCAL_DATE_TIME))
                 .claim(CUSTOM_CLAIM_USERNAME, user.getUsername())
                 .claim(CUSTOM_CLAIM_TAX_ID, user.getTaxId())
@@ -38,8 +38,8 @@ public class JwtService {
                 .compact();
     }
 
-    public String getUsername(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+    public String getUsername(String accessToken) {
+        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_USERNAME, String.class);
     }
 
     public String getTaxId(String accessToken) {

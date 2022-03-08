@@ -23,7 +23,7 @@ public class UserEntity {
 
     @Indexed(name = "user.taxId.unique-index", unique = true)
     private String taxId;
-
+    
     private String email;
     private String fullName;
     private String password;
