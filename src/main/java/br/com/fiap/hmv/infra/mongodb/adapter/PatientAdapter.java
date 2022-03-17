@@ -7,6 +7,7 @@ import br.com.fiap.hmv.infra.mongodb.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static br.com.fiap.hmv.infra.mongodb.mapper.PatientEntityMapper.toPatientEntity;
@@ -30,6 +31,12 @@ public class PatientAdapter implements PatientPort {
     public Mono<Patient> get(String patientId) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do usuário na base de dados.");
         return patientRepository.findById(patientId).map(PatientEntityMapper::toPatient);
+    }
+
+    @Override
+    public Flux<Patient> search() {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos usuários na base de dados.");
+        return patientRepository.findAll().map(PatientEntityMapper::toPatient);
     }
 
 }

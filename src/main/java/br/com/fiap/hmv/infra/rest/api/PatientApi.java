@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static br.com.fiap.hmv.infra.rest.api.mapper.PatientApiModelMapper.toPatient;
@@ -29,7 +30,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/patient")
+@RequestMapping("/patients")
 public class PatientApi {
 
     private final PatientAppService appService;
@@ -41,11 +42,11 @@ public class PatientApi {
             @ApiParam("Dados para cadastrar um paciente.")
             @RequestBody PostPatientRequest request
     ) {
-        log.info("[INFRA_REST_API POST /patient] Iniciando chamada ao app service para cadastrar um paciente.");
+        log.info("[INFRA_REST_API POST /patients] Iniciando chamada ao app service para cadastrar um paciente.");
         Patient patient = toPatient(request);
         return appService.insert(patient).thenReturn(patient).map(PatientApiModelMapper::toPostPatientResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /patient] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API POST /patient] Finalizado com erro [{}].",
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /patients] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /patients] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }
@@ -57,10 +58,22 @@ public class PatientApi {
             @ApiParam(value = "ID do paciente.", required = true)
             @PathVariable String patientId
     ) {
-        log.info("[INFRA_REST_API GET /patient/{patientId}] Iniciando chamada ao app service para obter um paciente.");
-        return appService.get(patientId).map(PatientApiModelMapper::toGetPatientResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API GET /patient/{patientId}] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API GET /patient/{patientId}] Finalizado com erro [{}].",
+        log.info("[INFRA_REST_API GET /patients/{patientId}] Iniciando chamada ao app service para obter um paciente.");
+        return appService.search(patientId).map(PatientApiModelMapper::toGetPatientResponse)
+                .doOnSuccess(u -> log.info("[INFRA_REST_API GET /patients/{patientId}] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API GET /patients/{patientId}] Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()
+                ));
+    }
+
+    @ApiOperation(value = "Buscar Pacientes", response = GetPatientResponse.class)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(OK)
+    public Flux<GetPatientResponse> get() {
+        log.info("[INFRA_REST_API GET /patients] Iniciando chamada ao app service para buscar pacientes.");
+        return appService.search().map(PatientApiModelMapper::toGetPatientResponse)
+                .doOnComplete(() -> log.info("[INFRA_REST_API GET /patients] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API GET /patients] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }
