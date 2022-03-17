@@ -24,7 +24,7 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service("authenticationAppService")
+@Service
 public class AuthenticationAppService {
 
     private final BCryptPasswordEncoder passwordEncoder;

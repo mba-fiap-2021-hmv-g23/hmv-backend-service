@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-@ApiModel("PostRefreshTokenRequestV1")
+@ApiModel("PostRefreshTokenRequest")
 @Getter
 public class PostRefreshTokenRequest {
 

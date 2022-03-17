@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@ApiModel("PostRefreshTokenResponseV1")
+@ApiModel("PostRefreshTokenResponse")
 @Getter
 @Builder
 public class PostRefreshTokenResponse {

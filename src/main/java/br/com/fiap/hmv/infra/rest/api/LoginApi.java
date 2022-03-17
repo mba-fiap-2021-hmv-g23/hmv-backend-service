@@ -25,39 +25,39 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(tags = "Login")
 @Slf4j
 @RequiredArgsConstructor
-@RestController("loginApiV1")
+@RestController
 public class LoginApi {
 
     private final AuthenticationAppService appService;
 
     @ApiOperation(value = "Realizar Login", response = PostLoginResponse.class)
-    @PostMapping(path = "/v1/login", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/login", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(OK)
     public Mono<PostLoginResponse> post(
-            @ApiParam("Dados para realizar login.")
+            @ApiParam("Dados para realizar o login.")
             @RequestBody PostLoginRequest request
     ) {
-        log.info("[INFRA_REST_API POST /v1/login] Iniciando chamada ao app service para realizar login.");
+        log.info("[INFRA_REST_API POST /login] Iniciando chamada ao app service para realizar login.");
         User user = toUser(request);
         return appService.login(user).thenReturn(user).map(UserApiModelMapper::toPostLoginResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/login] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/login] Finalizado com erro [{}].",
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /login] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /login] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }
 
     @ApiOperation(value = "Renovar Login", response = PostRefreshTokenResponse.class)
-    @PostMapping(path = "/v1/refresh-token", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/refresh-token", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(OK)
     public Mono<PostRefreshTokenResponse> refreshToken(
             @ApiParam("Dados para renovar login.")
             @RequestBody PostRefreshTokenRequest request
     ) {
-        log.info("[INFRA_REST_API POST /v1/refresh-token] Iniciando chamada ao app service para renovar login.");
+        log.info("[INFRA_REST_API POST /refresh-token] Iniciando chamada ao app service para renovar login.");
         User user = toUser(request);
         return appService.refreshToken(user).thenReturn(user).map(UserApiModelMapper::toPostRefreshTokenResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/refresh-token] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/refresh-token] Finalizado com erro [{}].",
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /refresh-token] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /refresh-token] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }

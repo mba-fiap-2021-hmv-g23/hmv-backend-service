@@ -25,8 +25,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(tags = "Usuário")
 @Slf4j
 @RequiredArgsConstructor
-@RestController("userApiV1")
-@RequestMapping("/v1/users")
+@RestController
+@RequestMapping("/users")
 public class UserApi {
 
     private final UserAppService appService;
@@ -35,15 +35,15 @@ public class UserApi {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
     public Mono<PostUserResponse> post(
-            @ApiParam("Dados para cadastrar usuário.")
+            @ApiParam("Dados para cadastrar um usuário.")
             @RequestBody PostUserRequest request
     ) {
-        log.info("[INFRA_REST_API POST /v1/users] Iniciando chamada ao app service para cadastrar usuário.");
+        log.info("[INFRA_REST_API POST users] Iniciando chamada ao app service para cadastrar usuário.");
         User user = toUser(request);
         return appService.insert(user).thenReturn(user)
                 .map(UserApiModelMapper::toPostUserResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/users] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/users] Finalizado com erro [{}].",
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /users] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /users] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }

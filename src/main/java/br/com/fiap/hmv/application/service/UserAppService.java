@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service("userAppService")
+@Service
 public class UserAppService {
 
     private final BCryptPasswordEncoder passwordEncoder;

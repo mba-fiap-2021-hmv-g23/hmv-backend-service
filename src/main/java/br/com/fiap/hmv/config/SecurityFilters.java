@@ -36,9 +36,9 @@ public class SecurityFilters {
                         "/webjars/**",
                         "/swagger-ui/**"
                 ).permitAll()
-                .pathMatchers(HttpMethod.POST, "/v1/login").permitAll()
-                .pathMatchers(HttpMethod.POST, "/v1/refresh-token").permitAll()
-                .pathMatchers(HttpMethod.POST, "/v1/users").permitAll()
+                .pathMatchers(HttpMethod.POST, "/login").permitAll()
+                .pathMatchers(HttpMethod.POST, "/refresh-token").permitAll()
+                .pathMatchers(HttpMethod.POST, "/users").permitAll()
                 .anyExchange().authenticated()
                 .and().build();
     }

@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-@ApiModel("PostUserRequestV1")
+@ApiModel("PostUserRequest")
 @Getter
 public class PostUserRequest {
 
