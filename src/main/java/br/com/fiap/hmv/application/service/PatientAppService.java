@@ -1,5 +1,6 @@
 package br.com.fiap.hmv.application.service;
 
+import br.com.fiap.hmv.application.port.PatientPort;
 import br.com.fiap.hmv.domain.entity.Patient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,15 @@ import reactor.core.publisher.Mono;
 @Service
 public class PatientAppService {
 
+    private final PatientPort patientPort;
+
     public Mono<Void> insert(Patient patient) {
-        return Mono.empty();
+        log.info("[APPLICATION_SERVICE] Iniciando o cadastro do paciente");
+        return patientPort.insert(patient);
     }
 
     public Mono<Patient> get(String patientId) {
-        return Mono.just(Patient.builder().build());
+        log.info("[APPLICATION_SERVICE] Iniciando a busca do paciente");
+        return patientPort.get(patientId);
     }
 }

@@ -11,7 +11,7 @@ public class UserEntityMapper {
 
     public static UserEntity toUserEntity(User user) {
         return UserEntity.builder()
-                .id(user.getId())
+                .userId(user.getUserId())
                 .username(user.getUsername())
                 .taxId(user.getTaxId())
                 .email(user.getEmail())
@@ -22,7 +22,7 @@ public class UserEntityMapper {
 
     public static User toUser(UserEntity entity) {
         return User.builder()
-                .id(entity.getId())
+                .userId(entity.getUserId())
                 .username(entity.getUsername())
                 .taxId(entity.getTaxId())
                 .email(entity.getEmail())

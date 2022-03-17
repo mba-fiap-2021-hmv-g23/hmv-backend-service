@@ -14,11 +14,12 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
+import static br.com.fiap.hmv.infra.mongodb.mapper.UserEntityMapper.toUserEntity;
+import static java.util.UUID.randomUUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component("userPortMongoDBImpl")
+@Component
 public class UserAdapter implements UserPort {
 
     private final ReactiveMongoOperations mongoOperations;
@@ -27,18 +28,18 @@ public class UserAdapter implements UserPort {
     @Override
     public Mono<Void> insert(final User user) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando inclusão do usuário na base de dados.");
-        user.setId(UUID.randomUUID().toString());
-        return userRepository.insert(UserEntityMapper.toUserEntity(user)).then();
+        user.setUserId(randomUUID().toString());
+        return userRepository.insert(toUserEntity(user)).then();
     }
 
     @Override
     public Mono<Void> updateSession(final User user) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando atualização da sessão do usuário.");
         return mongoOperations.updateFirst(
-                new Query(new Criteria("_id").is(user.getId().toString())),
+                new Query(new Criteria("_id").is(user.getUserId())),
                 new Update().set("accessTokenExpiresIn", user.getAccessTokenExpiresIn())
                         .set("refreshTokenExpiresIn", user.getRefreshTokenExpiresIn())
-                        .set("refreshToken", user.getRefreshToken().toString()),
+                        .set("refreshToken", user.getRefreshToken()),
                 UserEntity.class
         ).then();
     }
@@ -51,6 +52,6 @@ public class UserAdapter implements UserPort {
 
     @Override
     public Mono<User> findByRefreshToken(String refreshToken) {
-        return userRepository.findByRefreshToken(refreshToken.toString()).map(UserEntityMapper::toUser);
+        return userRepository.findByRefreshToken(refreshToken).map(UserEntityMapper::toUser);
     }
 }

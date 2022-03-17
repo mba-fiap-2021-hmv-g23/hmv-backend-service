@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-import static br.com.fiap.hmv.application.utils.ObfuscateUtils.obfuscateTaxId;
-import static br.com.fiap.hmv.application.utils.ObfuscateUtils.obfuscateToken;
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -38,25 +36,18 @@ public class AuthenticationAppService {
     private Integer refreshTokenExpiresInMinutes;
 
     public Mono<Void> login(final User user) {
-        log.info("[APPLICATION_SERVICE] Iniciando o login. Nome de usuário: {}. CPF: {}",
-                user.getUsername(), obfuscateTaxId(user.getTaxId())
-        );
+        log.info("[APPLICATION_SERVICE] Iniciando o login.");
         return userPort.findByLogin(user.getUsername(), user.getTaxId())
                 .filter(userStorage -> passwordEncoder.matches(user.getPassword(), userStorage.getPassword()))
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Dados inválidos.")))
                 .doOnSuccess(userStorage -> {
                     updateAccessToken(user, userStorage);
-                    log.info("[APPLICATION_SERVICE] Usuário logado com sucesso. Nome de usuário: {}, Token de acesso: {}",
-                            user.getUsername(), obfuscateToken(user.getAccessToken())
-                    );
                 })
                 .then();
     }
 
     public Mono<Void> refreshToken(final User user) {
-        log.info("[APPLICATION_SERVICE] Iniciando a renovação do login do usuário. Token de renovação: {}.",
-                obfuscateToken(user.getRefreshToken())
-        );
+        log.info("[APPLICATION_SERVICE] Iniciando a renovação do login do usuário.");
         return userPort.findByRefreshToken(user.getRefreshToken())
                 .filter(userStorage -> nonNull(userStorage.getRefreshTokenExpiresIn())
                         && userStorage.getRefreshTokenExpiresIn().isAfter(now())
@@ -64,10 +55,6 @@ public class AuthenticationAppService {
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Dados inválidos.")))
                 .doOnSuccess(userStorage -> {
                     updateAccessToken(user, userStorage);
-                    log.info("[APPLICATION_SERVICE] Login renovado com sucesso. Nome de usuário: {}, " +
-                                    "Novo Token de acesso: {}",
-                            user.getUsername(), obfuscateToken(user.getAccessToken())
-                    );
                 })
                 .then();
     }
@@ -81,7 +68,7 @@ public class AuthenticationAppService {
             user.setAccessTokenExpiresIn(userStorage.getAccessTokenExpiresIn());
             user.setRefreshTokenExpiresIn(userStorage.getRefreshTokenExpiresIn());
         }
-        user.setId(userStorage.getId());
+        user.setUserId(userStorage.getUserId());
         user.setTaxId(userStorage.getTaxId());
         user.setUsername(userStorage.getUsername());
         user.setFullName(userStorage.getFullName());

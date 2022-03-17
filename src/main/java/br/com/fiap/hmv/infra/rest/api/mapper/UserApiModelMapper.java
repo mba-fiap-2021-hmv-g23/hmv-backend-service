@@ -52,7 +52,7 @@ public class UserApiModelMapper {
 
     public static PostUserResponse toPostUserResponse(User user) {
         return PostUserResponse.builder()
-                .userId(user.getId())
+                .userId(user.getUserId())
                 .build();
     }
 

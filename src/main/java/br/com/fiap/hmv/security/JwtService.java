@@ -29,7 +29,7 @@ public class JwtService {
 
     public String generateAccessToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getId())
+                .setSubject(user.getUserId())
                 .claim(CUSTOM_CLAIM_EXPIRES_IN, user.getAccessTokenExpiresIn().format(ISO_LOCAL_DATE_TIME))
                 .claim(CUSTOM_CLAIM_USERNAME, user.getUsername())
                 .claim(CUSTOM_CLAIM_TAX_ID, user.getTaxId())

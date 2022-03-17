@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface UserRepository extends ReactiveMongoRepository<UserEntity, UUID> {
+public interface UserRepository extends ReactiveMongoRepository<UserEntity, String> {
 
     Mono<UserEntity> findByUsernameOrTaxId(String username, String taxId);
 

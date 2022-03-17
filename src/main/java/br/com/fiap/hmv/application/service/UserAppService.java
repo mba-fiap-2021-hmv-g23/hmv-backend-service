@@ -17,11 +17,9 @@ public class UserAppService {
     private final UserPort userPort;
 
     public Mono<Void> insert(final User user) {
-        log.info("[APPLICATION_SERVICE] Iniciando o cadastro de usuário. Nome de usuário: {}.", user.getUsername());
+        log.info("[APPLICATION_SERVICE] Iniciando o cadastro de usuário.");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userPort.insert(user).doOnSuccess(v -> log.info("[APPLICATION_SERVICE] Usuário cadastrado com " +
-                "sucesso. ID do usuário: {}, Nome de usuário: {}.", user.getId(), user.getUsername()
-        ));
+        return userPort.insert(user);
     }
 
 }

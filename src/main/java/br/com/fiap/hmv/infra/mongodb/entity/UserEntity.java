@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class UserEntity {
 
     @Id
-    private String id;
+    private String userId;
 
     @Indexed(name = "user.username.unique-index", unique = true)
     private String username;
