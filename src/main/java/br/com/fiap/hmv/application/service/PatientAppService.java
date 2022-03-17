@@ -10,7 +10,12 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @Service
 public class PatientAppService {
+
     public Mono<Void> insert(Patient patient) {
         return Mono.empty();
+    }
+
+    public Mono<Patient> get(String patientId) {
+        return Mono.just(Patient.builder().build());
     }
 }
