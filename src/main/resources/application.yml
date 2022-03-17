@@ -6,5 +6,5 @@ spring:
 auth:
   jwt:
     secretKey: ${AUTH_SECRET_KEY}
-  accessTokenExpiresInMinutes: 1
-  refreshTokenExpiresInMinutes: 2
+  accessTokenExpiresInMinutes: 15
+  refreshTokenExpiresInMinutes: 30
