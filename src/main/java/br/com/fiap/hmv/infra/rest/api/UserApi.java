@@ -31,7 +31,7 @@ public class UserApi {
 
     private final UserAppService appService;
 
-    @ApiOperation(value = "Cadastrar usuário", response = PostRefreshTokenResponse.class)
+    @ApiOperation(value = "Cadastrar Usuário", response = PostRefreshTokenResponse.class)
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
     public Mono<PostUserResponse> post(

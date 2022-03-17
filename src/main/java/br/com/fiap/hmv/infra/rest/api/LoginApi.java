@@ -46,14 +46,14 @@ public class LoginApi {
                 ));
     }
 
-    @ApiOperation(value = "Renovar Login", response = PostRefreshTokenResponse.class)
+    @ApiOperation(value = "Renovar Sessão", response = PostRefreshTokenResponse.class)
     @PostMapping(path = "/refresh-token", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(OK)
     public Mono<PostRefreshTokenResponse> refreshToken(
             @ApiParam("Dados para renovar login.")
             @RequestBody PostRefreshTokenRequest request
     ) {
-        log.info("[INFRA_REST_API POST /refresh-token] Iniciando chamada ao app service para renovar login.");
+        log.info("[INFRA_REST_API POST /refresh-token] Iniciando chamada ao app service para renovar sessão.");
         User user = toUser(request);
         return appService.refreshToken(user).thenReturn(user).map(UserApiModelMapper::toPostRefreshTokenResponse)
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /refresh-token] Finalizado com sucesso."))
