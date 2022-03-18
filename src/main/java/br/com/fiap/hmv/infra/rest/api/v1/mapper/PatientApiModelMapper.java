@@ -1,9 +1,9 @@
-package br.com.fiap.hmv.infra.rest.api.mapper;
+package br.com.fiap.hmv.infra.rest.api.v1.mapper;
 
 import br.com.fiap.hmv.domain.entity.Patient;
-import br.com.fiap.hmv.infra.rest.api.model.GetPatientResponse;
-import br.com.fiap.hmv.infra.rest.api.model.PostPatientRequest;
-import br.com.fiap.hmv.infra.rest.api.model.PostPatientResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.GetPatientResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostPatientRequest;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostPatientResponse;
 
 public class PatientApiModelMapper {
 

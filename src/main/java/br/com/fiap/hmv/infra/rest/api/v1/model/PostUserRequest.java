@@ -1,10 +1,10 @@
-package br.com.fiap.hmv.infra.rest.api.model;
+package br.com.fiap.hmv.infra.rest.api.v1.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-@ApiModel("PostUserRequest")
+@ApiModel("PostUserRequestV1")
 @Getter
 public class PostUserRequest {
 

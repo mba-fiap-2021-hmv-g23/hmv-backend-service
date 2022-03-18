@@ -1,11 +1,11 @@
-package br.com.fiap.hmv.infra.rest.api;
+package br.com.fiap.hmv.infra.rest.api.v1;
 
 import br.com.fiap.hmv.application.service.UserAppService;
 import br.com.fiap.hmv.domain.entity.User;
-import br.com.fiap.hmv.infra.rest.api.mapper.UserApiModelMapper;
-import br.com.fiap.hmv.infra.rest.api.model.PostRefreshTokenResponse;
-import br.com.fiap.hmv.infra.rest.api.model.PostUserRequest;
-import br.com.fiap.hmv.infra.rest.api.model.PostUserResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.mapper.UserApiModelMapper;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostRefreshTokenResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostUserRequest;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostUserResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import static br.com.fiap.hmv.infra.rest.api.mapper.UserApiModelMapper.toUser;
+import static br.com.fiap.hmv.infra.rest.api.v1.mapper.UserApiModelMapper.toUser;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 public class UserApi {
 
     private final UserAppService appService;
@@ -38,12 +38,12 @@ public class UserApi {
             @ApiParam("Dados para cadastrar um usuário.")
             @RequestBody PostUserRequest request
     ) {
-        log.info("[INFRA_REST_API POST users] Iniciando chamada ao app service para cadastrar usuário.");
+        log.info("[INFRA_REST_API POST /v1/users] Iniciando chamada ao app service para cadastrar usuário.");
         User user = toUser(request);
         return appService.insert(user).thenReturn(user)
                 .map(UserApiModelMapper::toPostUserResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /users] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API POST /users] Finalizado com erro [{}].",
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/users] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/users] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }

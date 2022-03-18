@@ -1,20 +1,15 @@
-package br.com.fiap.hmv.infra.rest.api.model;
+package br.com.fiap.hmv.infra.rest.api.v1.model;
 
 import br.com.fiap.hmv.domain.Genre;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
-@ApiModel("GetPatientResponse")
+@ApiModel(value = "PostPatientRequestV1")
 @Getter
-@Builder
-public class GetPatientResponse {
-
-    @ApiModelProperty(value = "ID do paciente.", required = true)
-    private String patientId;
+public class PostPatientRequest {
 
     @ApiModelProperty(value = "CPF.", required = true)
     private String taxId;

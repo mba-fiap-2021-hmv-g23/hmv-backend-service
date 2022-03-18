@@ -1,12 +1,12 @@
-package br.com.fiap.hmv.infra.rest.api.mapper;
+package br.com.fiap.hmv.infra.rest.api.v1.mapper;
 
 import br.com.fiap.hmv.domain.entity.User;
-import br.com.fiap.hmv.infra.rest.api.model.PostLoginRequest;
-import br.com.fiap.hmv.infra.rest.api.model.PostLoginResponse;
-import br.com.fiap.hmv.infra.rest.api.model.PostRefreshTokenRequest;
-import br.com.fiap.hmv.infra.rest.api.model.PostRefreshTokenResponse;
-import br.com.fiap.hmv.infra.rest.api.model.PostUserRequest;
-import br.com.fiap.hmv.infra.rest.api.model.PostUserResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostLoginRequest;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostLoginResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostRefreshTokenRequest;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostRefreshTokenResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostUserRequest;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostUserResponse;
 import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
