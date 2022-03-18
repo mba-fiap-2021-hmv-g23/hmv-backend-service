@@ -15,12 +15,13 @@ public class Patient {
 
     private String patientId;
     private String taxId;
-    private String email;
     private String fullName;
     private String phone;
-    private String cellphone;
     private LocalDate birthDate;
     private Genre genre;
+    private String cellphone;
+    private String email;
+    private String address;
     private String healthInsurance;
     private String healthCardNumber;
 
