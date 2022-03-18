@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -19,6 +21,9 @@ public class UserAppService {
     public Mono<Void> insert(final User user) {
         log.info("[APPLICATION_SERVICE] Iniciando o cadastro de usuário.");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (isNull(user.getUsername())) {
+            user.setUsername(user.getFullName().replaceAll(" ", "") + user.getTaxId());
+        }
         return userPort.insert(user);
     }
 

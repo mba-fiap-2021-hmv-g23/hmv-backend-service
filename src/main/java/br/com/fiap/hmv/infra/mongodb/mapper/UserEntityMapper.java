@@ -14,7 +14,6 @@ public class UserEntityMapper {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .taxId(user.getTaxId())
-                .email(user.getEmail())
                 .password(user.getPassword())
                 .fullName(user.getFullName())
                 .build();
@@ -25,7 +24,6 @@ public class UserEntityMapper {
                 .userId(entity.getUserId())
                 .username(entity.getUsername())
                 .taxId(entity.getTaxId())
-                .email(entity.getEmail())
                 .password(entity.getPassword())
                 .fullName(entity.getFullName())
                 .accessTokenExpiresIn(entity.getAccessTokenExpiresIn())

@@ -8,17 +8,14 @@ import lombok.Getter;
 @Getter
 public class PostUserRequest {
 
-    @ApiModelProperty(value = "Nome de usuário.", required = true)
-    private String username;
-
     @ApiModelProperty(value = "CPF.", required = true)
     private String taxId;
 
     @ApiModelProperty(value = "Nome completo.", required = true)
     private String fullName;
 
-    @ApiModelProperty(value = "E-mail.", required = true)
-    private String email;
+    @ApiModelProperty(value = "Nome de usuário.")
+    private String username;
 
     @ApiModelProperty(value = "Senha.", required = true)
     private String password;

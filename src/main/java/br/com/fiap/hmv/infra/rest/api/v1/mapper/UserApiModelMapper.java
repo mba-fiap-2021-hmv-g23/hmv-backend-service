@@ -21,7 +21,6 @@ public class UserApiModelMapper {
     public static User toUser(PostUserRequest request) {
         return User.builder()
                 .username(request.getUsername())
-                .email(request.getEmail())
                 .fullName(request.getFullName())
                 .password(request.getPassword())
                 .taxId(request.getTaxId().replaceAll("\\.|\\-", ""))

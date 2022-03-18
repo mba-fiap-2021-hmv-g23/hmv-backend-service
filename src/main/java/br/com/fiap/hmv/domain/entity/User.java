@@ -14,7 +14,6 @@ public class User {
     private String userId;
     private String username;
     private String taxId;
-    private String email;
     private String fullName;
     private String password;
     private String accessToken;
