@@ -1,7 +1,6 @@
 package br.com.fiap.hmv.domain.entity;
 
 import br.com.fiap.hmv.domain.Genre;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +20,7 @@ public class Patient {
     private Genre genre;
     private String cellphone;
     private String email;
-    private String address;
+    private Address address;
     private String healthInsurance;
     private String healthCardNumber;
 

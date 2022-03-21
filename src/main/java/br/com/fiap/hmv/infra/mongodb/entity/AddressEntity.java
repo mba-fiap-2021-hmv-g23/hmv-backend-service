@@ -1,13 +1,11 @@
-package br.com.fiap.hmv.domain.entity;
+package br.com.fiap.hmv.infra.mongodb.entity;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
-public class Address {
+public class AddressEntity {
 
     private String zipcode;
     private String publicPlace;

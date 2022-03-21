@@ -28,6 +28,7 @@ public class PatientEntity {
     private String cellphone;
     private LocalDate birthDate;
     private Genre genre;
+    private AddressEntity address;
     private String healthInsurance;
     private String healthCardNumber;
 

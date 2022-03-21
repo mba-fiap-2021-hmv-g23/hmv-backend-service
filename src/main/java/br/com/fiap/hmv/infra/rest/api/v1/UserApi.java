@@ -2,7 +2,7 @@ package br.com.fiap.hmv.infra.rest.api.v1;
 
 import br.com.fiap.hmv.application.service.UserAppService;
 import br.com.fiap.hmv.domain.entity.User;
-import br.com.fiap.hmv.infra.rest.api.v1.mapper.UserApiModelMapper;
+import br.com.fiap.hmv.infra.rest.api.v1.mapper.UserModelMapper;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostRefreshTokenResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostUserRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostUserResponse;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import static br.com.fiap.hmv.infra.rest.api.v1.mapper.UserApiModelMapper.toUser;
+import static br.com.fiap.hmv.infra.rest.api.v1.mapper.UserModelMapper.toUser;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -41,7 +41,7 @@ public class UserApi {
         log.info("[INFRA_REST_API POST /v1/users] Iniciando chamada ao app service para cadastrar usuário.");
         User user = toUser(request);
         return appService.insert(user).thenReturn(user)
-                .map(UserApiModelMapper::toPostUserResponse)
+                .map(UserModelMapper::toPostUserResponse)
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/users] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/users] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()

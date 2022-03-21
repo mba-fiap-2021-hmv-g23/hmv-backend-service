@@ -32,6 +32,9 @@ public class PostPatientRequest {
     @ApiModelProperty(value = "Sexo.", required = true)
     private Genre genre;
 
+    @ApiModelProperty("Endereço.")
+    private AddressModel address;
+
     @ApiModelProperty(value = "Plano de saúde.", required = true)
     private String healthInsurance;
 

@@ -5,7 +5,10 @@ import br.com.fiap.hmv.infra.rest.api.v1.model.GetPatientResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostPatientRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostPatientResponse;
 
-public class PatientApiModelMapper {
+import static br.com.fiap.hmv.infra.rest.api.v1.mapper.AddressModelMapper.toAddress;
+import static br.com.fiap.hmv.infra.rest.api.v1.mapper.AddressModelMapper.toAddressModel;
+
+public class PatientModelMapper {
 
     public static Patient toPatient(PostPatientRequest request) {
         return Patient.builder()
@@ -16,6 +19,7 @@ public class PatientApiModelMapper {
                 .phone(request.getPhone())
                 .cellphone(request.getCellphone())
                 .birthDate(request.getBirthDate())
+                .address(toAddress(request.getAddress()))
                 .healthInsurance(request.getHealthInsurance())
                 .healthCardNumber(request.getHealthCardNumber())
                 .build();
@@ -37,6 +41,7 @@ public class PatientApiModelMapper {
                 .phone(patient.getPhone())
                 .cellphone(patient.getCellphone())
                 .birthDate(patient.getBirthDate())
+                .address(toAddressModel(patient.getAddress()))
                 .healthInsurance(patient.getHealthInsurance())
                 .healthCardNumber(patient.getHealthCardNumber())
                 .build();

@@ -29,5 +29,5 @@ public class PatientAppService {
         log.info("[APPLICATION_SERVICE] Iniciando a busca dos pacientes");
         return patientPort.search();
     }
-    
+
 }

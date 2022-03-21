@@ -3,8 +3,6 @@ package br.com.fiap.hmv.application.port;
 import br.com.fiap.hmv.domain.entity.User;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 public interface UserPort {
 
     Mono<Void> insert(final User user);

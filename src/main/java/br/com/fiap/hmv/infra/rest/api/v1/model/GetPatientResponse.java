@@ -37,6 +37,9 @@ public class GetPatientResponse {
     @ApiModelProperty(value = "Sexo.", required = true)
     private Genre genre;
 
+    @ApiModelProperty(value = "Endereço.")
+    private AddressModel address;
+
     @ApiModelProperty(value = "Plano de saúde.", required = true)
     private String healthInsurance;
 

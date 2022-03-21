@@ -3,6 +3,9 @@ package br.com.fiap.hmv.infra.mongodb.mapper;
 import br.com.fiap.hmv.domain.entity.Patient;
 import br.com.fiap.hmv.infra.mongodb.entity.PatientEntity;
 
+import static br.com.fiap.hmv.infra.mongodb.mapper.AddressEntityMapper.toAddress;
+import static br.com.fiap.hmv.infra.mongodb.mapper.AddressEntityMapper.toAddressEntity;
+
 public class PatientEntityMapper {
 
     public static PatientEntity toPatientEntity(Patient patient) {
@@ -15,6 +18,7 @@ public class PatientEntityMapper {
                 .email(patient.getEmail())
                 .phone(patient.getPhone())
                 .cellphone(patient.getCellphone())
+                .address(toAddressEntity(patient.getAddress()))
                 .healthInsurance(patient.getHealthInsurance())
                 .healthCardNumber(patient.getHealthCardNumber())
                 .build();
@@ -30,8 +34,10 @@ public class PatientEntityMapper {
                 .email(entity.getEmail())
                 .phone(entity.getPhone())
                 .cellphone(entity.getCellphone())
+                .address(toAddress(entity.getAddress()))
                 .healthInsurance(entity.getHealthInsurance())
                 .healthCardNumber(entity.getHealthCardNumber())
                 .build();
     }
+    
 }

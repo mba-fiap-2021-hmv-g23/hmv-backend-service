@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public class UserApiModelMapper {
+public class UserModelMapper {
 
     private final static Pattern REGEX_TAX_ID = Pattern.compile("^\\d{11}$|(^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$)");
 
