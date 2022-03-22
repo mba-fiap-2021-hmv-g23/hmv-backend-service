@@ -19,8 +19,6 @@ public class CheckInModelMapper {
     public static PostCheckInResponse toPostCheckInResponse(CheckIn checkIn) {
         return PostCheckInResponse.builder()
                 .checkInId(checkIn.getCheckInId())
-                .queuePatientsNumber(checkIn.getQueuePatientsNumber())
-                .estimatedOpeningHours(checkIn.getEstimatedOpeningHours())
                 .build();
     }
 

@@ -16,7 +16,6 @@ public class CheckInEntityMapper {
                 .patientTaxId(checkIn.getPatient().getTaxId())
                 .inclusionDate(checkIn.getInclusionDate())
                 .estimatedTimeArrival(checkIn.getEstimatedTimeArrival())
-                .queuePatientsNumber(checkIn.getQueuePatientsNumber())
                 .ttl(now().plus(TTL_MINUTES, MINUTES))
                 .build();
     }
@@ -27,7 +26,6 @@ public class CheckInEntityMapper {
                 .patient(Patient.builder().taxId(checkInEntity.getPatientTaxId()).build())
                 .inclusionDate(checkInEntity.getInclusionDate())
                 .estimatedTimeArrival(checkInEntity.getEstimatedTimeArrival())
-                .queuePatientsNumber(checkInEntity.getQueuePatientsNumber())
                 .build();
     }
 

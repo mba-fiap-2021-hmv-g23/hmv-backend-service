@@ -24,10 +24,7 @@ public class CheckInEntity {
     private String checkInId;
 
     private String patientTaxId;
-    private String attendantId;
     private EstimatedTimeArrival estimatedTimeArrival;
-    private Integer queuePatientsNumber;
-    private LocalDateTime estimatedOpeningHours;
     private LocalDateTime inclusionDate;
     private LocalDateTime serviceStartTime;
 

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @Api(tags = "Atendimento")
 @Slf4j
@@ -47,10 +49,23 @@ public class AttendanceApi {
             @ApiParam(value = "Token de acesso.", required = true)
             @RequestHeader("Authorization") String accessToken
     ) {
-        log.info("[INFRA_REST_API POST /v1/attendances/services] Iniciando chamada ao app service para " +
+        log.info("[INFRA_REST_API DELETE /v1/attendances/services] Iniciando chamada ao app service para " +
                 "remover jornada de serviço à pacientes."
         );
         return appService.stopServiceToPatient(jwtService.getTaxId(accessToken));
+    }
+
+    @ApiOperation(value = "Iniciar chamada ao próximo paciente aguardando atendimento.")
+    @GetMapping(path = "/next-patient")
+    @ResponseStatus(OK)
+    public Mono<Void> getNextPatient(
+            @ApiParam(value = "Token de acesso.", required = true)
+            @RequestHeader("Authorization") String accessToken
+    ) {
+        log.info("[INFRA_REST_API GET /v1/attendances/next-patient] Iniciando chamada ao app service para " +
+                "iniciar chamada ao próximo paciente aguardando atendimento."
+        );
+        return appService.nextPatientToAttendance(jwtService.getTaxId(accessToken));
     }
 
 }

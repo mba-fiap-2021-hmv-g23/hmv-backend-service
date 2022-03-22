@@ -23,4 +23,9 @@ public class AttendanceAppService {
         return attendancePort.stopServiceToPatient(userTaxId);
     }
 
+    public Mono<Void> nextPatientToAttendance(String userTaxId) {
+        log.info("[APPLICATION_SERVICE] Iniciando chamada ao próximo paciente aguardando atendimento.");
+        return Mono.empty();
+    }
+
 }
