@@ -9,9 +9,6 @@ import lombok.Getter;
 @Getter
 public class PostCheckInRequest {
 
-    @ApiModelProperty(value = "CPF.", required = true)
-    private String patientTaxId;
-
     @ApiModelProperty(value = "Tempo estimado para dar entrada no hospital.", required = true)
     private EstimatedTimeArrival estimatedTimeArrival;
 

@@ -24,8 +24,8 @@ public class CheckInAppService {
     public Mono<Void> checkIn(final CheckIn checkIn) {
         log.info("[APPLICATION_SERVICE] Iniciando check-in do paciente.");
         return checkInPort.insert(checkIn).switchIfEmpty(Mono.defer(() -> Mono.zip(
-                        checkInPort.findAwaitingAttendance(),
-                        attendancePort.findAttendantsInService())
+                        checkInPort.findAwaitingAttendance().collectList(),
+                        attendancePort.findAttendantsInService().collectList())
                 .flatMap(tuple2 -> {
                     List<CheckIn> awaitingAttendance = tuple2.getT1();
                     List<User> attendantsInService = tuple2.getT2();

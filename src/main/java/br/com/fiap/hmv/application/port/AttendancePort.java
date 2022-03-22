@@ -1,9 +1,8 @@
 package br.com.fiap.hmv.application.port;
 
 import br.com.fiap.hmv.domain.entity.User;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 public interface AttendancePort {
 
@@ -11,6 +10,6 @@ public interface AttendancePort {
 
     Mono<Void> closeService(String attendantTaxTd);
 
-    Mono<List<User>> findAttendantsInService();
+    Flux<User> findAttendantsInService();
 
 }

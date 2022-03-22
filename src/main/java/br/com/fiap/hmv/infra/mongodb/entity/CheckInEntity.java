@@ -1,11 +1,11 @@
 package br.com.fiap.hmv.infra.mongodb.entity;
 
-import br.com.fiap.hmv.domain.entity.CheckInMode;
 import br.com.fiap.hmv.domain.entity.EstimatedTimeArrival;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -20,9 +20,14 @@ public class CheckInEntity {
     private String checkInId;
 
     private String patientTaxId;
+    private String attendantId;
     private EstimatedTimeArrival estimatedTimeArrival;
     private Integer queuePatientsNumber;
     private LocalDateTime estimatedOpeningHours;
     private LocalDateTime inclusionDate;
+    private LocalDateTime serviceStartTime;
+
+    @Indexed(name = "checkIn.ttl.index", expireAfterSeconds = 0)
+    private LocalDateTime ttl;
 
 }

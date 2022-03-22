@@ -5,9 +5,8 @@ import br.com.fiap.hmv.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,9 +26,9 @@ public class AttendanceAdapter implements AttendancePort {
     }
 
     @Override
-    public Mono<List<User>> findAttendantsInService() {
+    public Flux<User> findAttendantsInService() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos usuários em serviço de atendimento base de dados.");
-        return Mono.just(List.of());
+        return Flux.empty();
     }
 
 }
