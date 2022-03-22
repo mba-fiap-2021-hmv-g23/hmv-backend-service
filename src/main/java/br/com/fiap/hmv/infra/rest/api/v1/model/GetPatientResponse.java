@@ -1,6 +1,7 @@
 package br.com.fiap.hmv.infra.rest.api.v1.model;
 
 import br.com.fiap.hmv.domain.Genre;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -31,6 +32,7 @@ public class GetPatientResponse {
     @ApiModelProperty(value = "Celular.", required = true)
     private String cellphone;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "Data de nascimento.", required = true)
     private LocalDate birthDate;
 
