@@ -1,6 +1,6 @@
 package br.com.fiap.hmv.infra.mongodb.entity;
 
-import br.com.fiap.hmv.domain.Genre;
+import br.com.fiap.hmv.domain.entity.Genre;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

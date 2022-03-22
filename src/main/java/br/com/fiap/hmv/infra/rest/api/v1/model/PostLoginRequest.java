@@ -8,10 +8,7 @@ import lombok.Getter;
 @Getter
 public class PostLoginRequest {
 
-    @ApiModelProperty(
-            value = "Nome de usuário ou CPF. Exemplos: 'nome.sobrenome123', 12345678901, 123.456.789-01",
-            required = true
-    )
+    @ApiModelProperty(value = "Nome de usuário ou CPF.", required = true)
     private String login;
 
     @ApiModelProperty(value = "Senha.", required = true)

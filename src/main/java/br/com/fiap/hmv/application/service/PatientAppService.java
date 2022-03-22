@@ -1,6 +1,7 @@
 package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.port.PatientPort;
+import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.Patient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ public class PatientAppService {
 
     private final PatientPort patientPort;
 
-    public Mono<Void> insert(Patient patient) {
+    public Mono<Void> insert(final Patient patient) {
         log.info("[APPLICATION_SERVICE] Iniciando o cadastro do paciente");
         return patientPort.insert(patient);
     }
