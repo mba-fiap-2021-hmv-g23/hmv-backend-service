@@ -1,6 +1,5 @@
 package br.com.fiap.hmv.domain.entity;
 
-import br.com.fiap.hmv.domain.Genre;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
