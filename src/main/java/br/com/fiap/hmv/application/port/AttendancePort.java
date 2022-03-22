@@ -6,9 +6,9 @@ import reactor.core.publisher.Mono;
 
 public interface AttendancePort {
 
-    Mono<Void> startService(String attendantTaxTd);
+    Mono<Void> startServiceToPatient(String userTaxId);
 
-    Mono<Void> closeService(String attendantTaxTd);
+    Mono<Void> stopServiceToPatient(String userTaxId);
 
     Flux<User> findAttendantsInService();
 
