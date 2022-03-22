@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static br.com.fiap.hmv.infra.mongodb.entity.CheckInEntity.TTL_MINUTES;
 import static br.com.fiap.hmv.infra.mongodb.mapper.CheckInEntityMapper.toCheckInEntity;
 import static java.time.Duration.ofSeconds;
 import static java.time.LocalDateTime.now;
@@ -26,16 +27,26 @@ public class CheckInAdapter implements CheckInPort {
 
     @Override
     public Mono<Void> insert(CheckIn checkIn) {
-        log.info("[INFRA_MONGODB_ADAPTER] Iniciando inclusão do check-in na base de dados.");
-        String beginId = random(2, true, false).toUpperCase(ROOT);
-        String middleId = random(2, false, true).toUpperCase(ROOT);
-        String endId = random(1, true, false).toUpperCase(ROOT);
-        checkIn.setCheckInId(beginId + "-" + middleId + endId);
-        checkIn.setInclusionDate(now());
-        return checkInRepository.insert(toCheckInEntity(checkIn)).onErrorResume(t -> {
-            log.error("[INFRA_MONGODB_ADAPTER] Erro de inclusão do check-in. [{}].", t.getLocalizedMessage());
-            return insert(checkIn).then(Mono.empty());
-        }).timeout(ofSeconds(5)).then();
+        return checkInRepository.findOneByPatientTaxIdAndServiceStartTimeIsNull(checkIn.getPatient().getTaxId())
+                .flatMap(checkInEntity -> {
+                    log.info("[INFRA_MONGODB_ADAPTER] Check-in aguardando atendimento.");
+                    checkIn.setCheckInId(checkInEntity.getCheckInId());
+                    checkIn.setInclusionDate(checkInEntity.getInclusionDate());
+                    checkInEntity.setTtl(now().plus(TTL_MINUTES, MINUTES));
+                    return checkInRepository.save(checkInEntity).then(Mono.just(checkInEntity));
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.info("[INFRA_MONGODB_ADAPTER] Iniciando inclusão do check-in na base de dados.");
+                    String beginId = random(2, true, false).toUpperCase(ROOT);
+                    String middleId = random(2, false, true).toUpperCase(ROOT);
+                    String endId = random(1, true, false).toUpperCase(ROOT);
+                    checkIn.setCheckInId(beginId + "-" + middleId + endId);
+                    checkIn.setInclusionDate(now());
+                    return checkInRepository.insert(toCheckInEntity(checkIn)).onErrorResume(t -> {
+                        log.error("[INFRA_MONGODB_ADAPTER] Erro de inclusão do check-in. [{}].", t.getLocalizedMessage());
+                        return insert(checkIn).then(Mono.empty());
+                    }).timeout(ofSeconds(5));
+                })).then();
     }
 
     @Override

@@ -4,6 +4,7 @@ import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.Patient;
 import br.com.fiap.hmv.infra.mongodb.entity.CheckInEntity;
 
+import static br.com.fiap.hmv.infra.mongodb.entity.CheckInEntity.TTL_MINUTES;
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
@@ -16,7 +17,7 @@ public class CheckInEntityMapper {
                 .inclusionDate(checkIn.getInclusionDate())
                 .estimatedTimeArrival(checkIn.getEstimatedTimeArrival())
                 .queuePatientsNumber(checkIn.getQueuePatientsNumber())
-                .ttl(now().plus(2, MINUTES))
+                .ttl(now().plus(TTL_MINUTES, MINUTES))
                 .build();
     }
 
