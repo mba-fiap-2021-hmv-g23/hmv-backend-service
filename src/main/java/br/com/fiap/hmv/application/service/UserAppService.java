@@ -8,7 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static java.util.Locale.ROOT;
 import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.stripAccents;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +24,8 @@ public class UserAppService {
         log.info("[APPLICATION_SERVICE] Iniciando o cadastro de usuário.");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (isNull(user.getUsername())) {
-            user.setUsername(user.getFullName().replaceAll(" ", "") + user.getTaxId());
+            String fullName = stripAccents(user.getFullName().trim().toLowerCase(ROOT));
+            user.setUsername(fullName.replaceAll(" ", ".") + user.getTaxId());
         }
         return userPort.insert(user);
     }
