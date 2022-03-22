@@ -23,7 +23,7 @@ public class ApiExceptionHandler {
         error.put("status", ex.getHttpStatus().value());
         error.put("error", ex.getHttpStatus().getReasonPhrase());
         error.put("message", message);
-        log.error("[INFRA_REST_API_HANDLER] Erro ao processar requisição. {}.", message);
+        log.error("[INFRA_REST_API_HANDLER] Erro ao processar requisição. [{}].", message);
         return ResponseEntity.status(ex.getHttpStatus()).body(error);
     }
 

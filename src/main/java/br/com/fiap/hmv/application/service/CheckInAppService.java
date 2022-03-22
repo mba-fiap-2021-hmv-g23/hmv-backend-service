@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static br.com.fiap.hmv.domain.service.CheckInService.calculateServiceQueueTime;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -20,13 +22,16 @@ public class CheckInAppService {
     private final AttendancePort attendancePort;
 
     public Mono<Void> checkIn(final CheckIn checkIn) {
-        return checkInPort.insert(checkIn).flatMap(u -> Mono.zip(
+        log.info("[APPLICATION_SERVICE] Iniciando check-in do paciente.");
+        return checkInPort.insert(checkIn).switchIfEmpty(Mono.defer(() -> Mono.zip(
                         checkInPort.findAwaitingAttendance(),
                         attendancePort.findAttendantsInService())
                 .flatMap(tuple2 -> {
                     List<CheckIn> awaitingAttendance = tuple2.getT1();
                     List<User> attendantsInService = tuple2.getT2();
-                    return Mono.empty();
-                }));
+                    calculateServiceQueueTime(awaitingAttendance, attendantsInService, checkIn);
+                    return checkInPort.update(checkIn);
+                })));
     }
+
 }

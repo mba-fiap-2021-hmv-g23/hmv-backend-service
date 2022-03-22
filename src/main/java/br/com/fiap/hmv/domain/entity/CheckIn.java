@@ -13,10 +13,9 @@ public class CheckIn {
 
     private String checkInId;
     private Patient patient;
-    private CheckInMode mode;
     private EstimatedTimeArrival estimatedTimeArrival;
-    private String queuePatientsNumber;
-    private LocalDateTime expectedOpeningHours;
+    private Integer queuePatientsNumber;
+    private LocalDateTime estimatedOpeningHours;
     private LocalDateTime inclusionDate;
 
 }

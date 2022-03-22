@@ -12,7 +12,6 @@ public class CheckInModelMapper {
                 .patient(Patient.builder()
                         .taxId(request.getPatientTaxId())
                         .build())
-                .mode(request.getMode())
                 .estimatedTimeArrival(request.getEstimatedTimeArrival())
                 .build();
     }
@@ -21,7 +20,7 @@ public class CheckInModelMapper {
         return PostCheckInResponse.builder()
                 .checkInId(checkIn.getCheckInId())
                 .queuePatientsNumber(checkIn.getQueuePatientsNumber())
-                .expectedOpeningHours(checkIn.getExpectedOpeningHours())
+                .estimatedOpeningHours(checkIn.getEstimatedOpeningHours())
                 .build();
     }
 
