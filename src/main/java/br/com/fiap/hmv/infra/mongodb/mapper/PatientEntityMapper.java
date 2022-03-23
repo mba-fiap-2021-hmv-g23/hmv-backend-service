@@ -39,5 +39,5 @@ public class PatientEntityMapper {
                 .healthCardNumber(entity.getHealthCardNumber())
                 .build();
     }
-    
+
 }

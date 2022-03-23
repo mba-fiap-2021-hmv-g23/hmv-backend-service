@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 import static br.com.fiap.hmv.infra.mongodb.mapper.CheckInEntityMapper.toCheckInEntity;
 import static java.time.Duration.ofSeconds;
 import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Locale.ROOT;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -28,13 +29,14 @@ public class CheckInAdapter implements CheckInPort {
     @Override
     public Mono<Void> insert(CheckIn checkIn) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando inclusão do check-in na base de dados.");
-        return checkInRepository.findByPatientTaxIdAndServiceStartTimeIsNull(checkIn.getPatient().getTaxId())
+        return checkInRepository.findByPatientTaxIdAndServiceStartDateIsNull(checkIn.getPatient().getTaxId())
                 .flatMap(u -> Mono.error(new HttpException("Já existe um check-in em andamento. " +
                         "Aguarde que em breve você será chamado para atendimento.", BAD_REQUEST)))
                 .switchIfEmpty(Mono.defer(() -> {
                     String beginId = random(2, true, false).toUpperCase(ROOT);
                     String middleId = random(2, false, true).toUpperCase(ROOT);
                     String endId = random(1, true, false).toUpperCase(ROOT);
+                    checkIn.setExpiresDate(now().plus(4, HOURS));
                     checkIn.setCheckInId(beginId + "-" + middleId + endId);
                     checkIn.setInclusionDate(now());
                     return checkInRepository.insert(toCheckInEntity(checkIn)).onErrorResume(t -> {
@@ -54,7 +56,7 @@ public class CheckInAdapter implements CheckInPort {
     @Override
     public Flux<CheckIn> findAwaitingAttendance() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos check-ins aguardando o atendimento na base de dados.");
-        return checkInRepository.findByServiceStartTimeIsNull().map(CheckInEntityMapper::toCheckIn);
+        return checkInRepository.findByServiceStartDateIsNull().map(CheckInEntityMapper::toCheckIn);
     }
 
 }

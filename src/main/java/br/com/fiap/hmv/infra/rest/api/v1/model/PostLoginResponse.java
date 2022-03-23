@@ -19,7 +19,7 @@ public class PostLoginResponse {
     @ApiModelProperty(value = "Token de renovação de acesso.", required = true)
     private final String refreshToken;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "Data de validade do token de acesso.", required = true)
     private final LocalDateTime expiresIn;
 

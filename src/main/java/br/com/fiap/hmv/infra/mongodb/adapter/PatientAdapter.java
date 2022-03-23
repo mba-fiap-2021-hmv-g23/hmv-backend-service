@@ -34,6 +34,12 @@ public class PatientAdapter implements PatientPort {
     }
 
     @Override
+    public Mono<Patient> getByTaxId(String taxId) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do usuário na base de dados.");
+        return patientRepository.findByTaxId(taxId).map(PatientEntityMapper::toPatient);
+    }
+
+    @Override
     public Flux<Patient> search() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos usuários na base de dados.");
         return patientRepository.findAll().map(PatientEntityMapper::toPatient);

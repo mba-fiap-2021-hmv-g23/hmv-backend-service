@@ -32,7 +32,7 @@ public class GetPatientResponse {
     @ApiModelProperty(value = "Celular.", required = true)
     private String cellphone;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "Data de nascimento.", required = true)
     private LocalDate birthDate;
 

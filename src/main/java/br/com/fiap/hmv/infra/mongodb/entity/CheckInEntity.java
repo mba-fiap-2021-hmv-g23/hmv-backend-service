@@ -25,8 +25,9 @@ public class CheckInEntity {
 
     private String patientTaxId;
     private EstimatedTimeArrival estimatedTimeArrival;
+    private LocalDateTime expiresDate;
     private LocalDateTime inclusionDate;
-    private LocalDateTime serviceStartTime;
+    private LocalDateTime serviceStartDate;
 
     @Indexed(name = "checkIn.ttl.index", expireAfterSeconds = 0)
     private LocalDateTime ttl;

@@ -15,7 +15,8 @@ public class CheckIn {
     private Patient patient;
     private User attendant;
     private EstimatedTimeArrival estimatedTimeArrival;
+    private LocalDateTime expiresDate;
     private LocalDateTime inclusionDate;
-    private LocalDateTime serviceStartTime;
+    private LocalDateTime serviceStartDate;
 
 }

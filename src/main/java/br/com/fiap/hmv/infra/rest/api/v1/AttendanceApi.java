@@ -1,6 +1,8 @@
 package br.com.fiap.hmv.infra.rest.api.v1;
 
 import br.com.fiap.hmv.application.service.AttendanceAppService;
+import br.com.fiap.hmv.infra.rest.api.v1.mapper.AttendanceModelMapper;
+import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceNextPatientResponse;
 import br.com.fiap.hmv.security.JwtService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,17 +57,21 @@ public class AttendanceApi {
         return appService.stopServiceToPatient(jwtService.getTaxId(accessToken));
     }
 
-    @ApiOperation(value = "Iniciar chamada ao próximo paciente aguardando atendimento.")
+    @ApiOperation(
+            value = "Iniciar chamada ao próximo paciente aguardando atendimento.",
+            response = GetAttendanceNextPatientResponse.class
+    )
     @GetMapping(path = "/next-patient")
     @ResponseStatus(OK)
-    public Mono<Void> getNextPatient(
+    public Mono<GetAttendanceNextPatientResponse> getNextPatient(
             @ApiParam(value = "Token de acesso.", required = true)
             @RequestHeader("Authorization") String accessToken
     ) {
         log.info("[INFRA_REST_API GET /v1/attendances/next-patient] Iniciando chamada ao app service para " +
                 "iniciar chamada ao próximo paciente aguardando atendimento."
         );
-        return appService.nextPatientToAttendance(jwtService.getTaxId(accessToken));
+        return appService.nextPatientToAttendance(jwtService.getTaxId(accessToken))
+                .map(AttendanceModelMapper::toGetAttendanceNextPatientResponse);
     }
 
 }

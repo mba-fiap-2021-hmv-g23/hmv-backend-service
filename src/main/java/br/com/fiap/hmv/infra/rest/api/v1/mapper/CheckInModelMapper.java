@@ -19,6 +19,8 @@ public class CheckInModelMapper {
     public static PostCheckInResponse toPostCheckInResponse(CheckIn checkIn) {
         return PostCheckInResponse.builder()
                 .checkInId(checkIn.getCheckInId())
+                .checkInDate(checkIn.getInclusionDate())
+                .expiresDate(checkIn.getExpiresDate())
                 .build();
     }
 
