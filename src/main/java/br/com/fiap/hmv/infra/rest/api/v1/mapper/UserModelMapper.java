@@ -59,8 +59,10 @@ public class UserModelMapper {
         return PostLoginResponse.builder()
                 .accessToken(user.getAccessToken())
                 .refreshToken(user.getRefreshToken())
+                .userId(user.getUserId())
                 .username(user.getUsername())
-                .taxId(user.getTaxId())
+                .userTaxId(user.getTaxId())
+                .patientId(user.getPatientId())
                 .fullName(user.getFullName())
                 .expiresIn(user.getAccessTokenExpiresIn())
                 .build();

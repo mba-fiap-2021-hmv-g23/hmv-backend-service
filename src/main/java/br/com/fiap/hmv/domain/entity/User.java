@@ -16,6 +16,7 @@ public class User {
     private String taxId;
     private String fullName;
     private String password;
+    private String patientId;
     private String accessToken;
     private String refreshToken;
     private LocalDateTime accessTokenExpiresIn;

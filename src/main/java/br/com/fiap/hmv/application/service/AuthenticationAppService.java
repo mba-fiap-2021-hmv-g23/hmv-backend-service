@@ -1,6 +1,7 @@
 package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.exception.UnauthorizedException;
+import br.com.fiap.hmv.application.port.PatientPort;
 import br.com.fiap.hmv.application.port.UserPort;
 import br.com.fiap.hmv.domain.entity.User;
 import br.com.fiap.hmv.security.JwtService;
@@ -28,6 +29,7 @@ public class AuthenticationAppService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserPort userPort;
+    private final PatientPort patientPort;
 
     @Value("${auth.accessTokenExpiresInMinutes}")
     private Integer accessTokenExpiresInMinutes;
@@ -40,6 +42,10 @@ public class AuthenticationAppService {
         return userPort.findByLogin(user.getUsername(), user.getTaxId())
                 .filter(userStorage -> passwordEncoder.matches(user.getPassword(), userStorage.getPassword()))
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Dados inválidos.")))
+                .flatMap(userStorage -> patientPort.getByTaxId(user.getTaxId()).map(patient -> {
+                    user.setPatientId(patient.getPatientId());
+                    return userStorage;
+                }).switchIfEmpty(Mono.defer(() -> Mono.just(userStorage))))
                 .doOnSuccess(userStorage -> {
                     updateAccessToken(user, userStorage);
                 })

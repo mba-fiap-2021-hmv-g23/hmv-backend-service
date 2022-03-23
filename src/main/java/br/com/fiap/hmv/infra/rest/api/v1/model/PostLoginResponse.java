@@ -23,12 +23,19 @@ public class PostLoginResponse {
     @ApiModelProperty(value = "Data de validade do token de acesso.", required = true)
     private final LocalDateTime expiresIn;
 
+    @ApiModelProperty(value = "ID do usuário.", required = true)
+    private String userId;
+
     @ApiModelProperty(value = "Nome de usuário.", required = true)
     private final String username;
 
     @ApiModelProperty(value = "CPF.", required = true)
-    private final String taxId;
+    private final String userTaxId;
 
     @ApiModelProperty(value = "Nome completo.", required = true)
     private final String fullName;
+
+    @ApiModelProperty(value = "ID do paciente.", required = true)
+    private String patientId;
+    
 }
