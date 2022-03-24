@@ -1,6 +1,6 @@
 package br.com.fiap.hmv.infra.mongodb.entity;
 
-import br.com.fiap.hmv.domain.entity.EstimatedTimeArrival;
+import br.com.fiap.hmv.domain.type.EstimatedTimeArrival;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class CheckInEntity {
     @Id
     private String checkInId;
 
-    private String patientTaxId;
+    private String patientId;
     private EstimatedTimeArrival estimatedTimeArrival;
     private LocalDateTime expiresDate;
     private LocalDateTime inclusionDate;

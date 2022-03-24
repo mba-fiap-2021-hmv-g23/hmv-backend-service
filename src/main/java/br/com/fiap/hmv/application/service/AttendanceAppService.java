@@ -2,7 +2,6 @@ package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.port.AttendancePort;
 import br.com.fiap.hmv.application.port.CheckInPort;
-import br.com.fiap.hmv.application.port.PatientPort;
 import br.com.fiap.hmv.domain.entity.AttendanceQueueCalls;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.User;
@@ -19,7 +18,6 @@ import java.util.Optional;
 public class AttendanceAppService {
 
     private final AttendancePort attendancePort;
-    private final PatientPort patientPort;
     private final CheckInPort checkInPort;
 
     public Mono<Void> startServiceToPatient(String userTaxId) {
@@ -38,18 +36,18 @@ public class AttendanceAppService {
             Optional<CheckIn> checkInOpt = awaitingAttendanceList.stream().findFirst();
             if (checkInOpt.isPresent()) {
                 CheckIn checkIn = checkInOpt.get();
-                return patientPort.getByTaxId(checkIn.getPatient().getTaxId()).flatMap(patient -> {
-                    checkIn.setPatient(patient);
-                    checkIn.setAttendant(User.builder().userId(userId).build());
-                    return attendancePort.insertCallToStartAttendance(checkIn).thenReturn(checkIn);
-                });
+                checkIn.setAttendant(User.builder().userId(userId).build());
+                return attendancePort.insertCallToStartAttendance(checkIn).thenReturn(checkIn);
             }
             return Mono.empty();
         });
     }
 
     public Mono<AttendanceQueueCalls> findQueueCalls() {
-        return Mono.just(AttendanceQueueCalls.builder().build());
+        return checkInPort.findAwaitingAttendance().collectList()
+                .flatMap(awaitingAttendanceList -> Mono.just(AttendanceQueueCalls.builder()
+                        .awaitingCall(awaitingAttendanceList)
+                        .build()));
     }
 
 }

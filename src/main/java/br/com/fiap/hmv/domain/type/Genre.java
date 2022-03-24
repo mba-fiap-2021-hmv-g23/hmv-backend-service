@@ -1,4 +1,4 @@
-package br.com.fiap.hmv.domain.entity;
+package br.com.fiap.hmv.domain.type;
 
 public enum Genre {
 

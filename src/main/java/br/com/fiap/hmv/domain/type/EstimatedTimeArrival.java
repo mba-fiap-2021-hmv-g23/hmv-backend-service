@@ -1,4 +1,4 @@
-package br.com.fiap.hmv.domain.entity;
+package br.com.fiap.hmv.domain.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -44,7 +44,7 @@ public class CheckInApi {
         log.info("[INFRA_REST_API POST /v1/check-in] Iniciando chamada ao app service para realizar o check-in " +
                 "do paciente."
         );
-        CheckIn checkIn = CheckInModelMapper.toCheckIn(jwtService.getTaxId(accessToken), request);
+        CheckIn checkIn = CheckInModelMapper.toCheckIn(jwtService.getUserId(accessToken), request);
         return appService.checkIn(checkIn).thenReturn(checkIn).map(CheckInModelMapper::toPostCheckInResponse)
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/check-in] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/check-in] Finalizado com erro [{}].",

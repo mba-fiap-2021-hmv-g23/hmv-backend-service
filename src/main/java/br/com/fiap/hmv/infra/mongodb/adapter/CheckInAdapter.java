@@ -29,7 +29,7 @@ public class CheckInAdapter implements CheckInPort {
     @Override
     public Mono<Void> insert(CheckIn checkIn) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando inclusão do check-in na base de dados.");
-        return checkInRepository.findByPatientTaxIdAndServiceStartDateIsNull(checkIn.getPatient().getTaxId())
+        return checkInRepository.findByPatientIdAndServiceStartDateIsNull(checkIn.getPatient().getPatientId())
                 .flatMap(u -> Mono.error(new HttpException("Já existe um check-in em andamento. " +
                         "Aguarde que em breve você será chamado para atendimento.", BAD_REQUEST)))
                 .switchIfEmpty(Mono.defer(() -> {

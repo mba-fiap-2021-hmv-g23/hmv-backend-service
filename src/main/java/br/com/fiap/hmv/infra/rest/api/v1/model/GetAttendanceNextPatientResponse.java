@@ -1,6 +1,6 @@
 package br.com.fiap.hmv.infra.rest.api.v1.model;
 
-import br.com.fiap.hmv.domain.entity.Genre;
+import br.com.fiap.hmv.domain.type.Genre;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

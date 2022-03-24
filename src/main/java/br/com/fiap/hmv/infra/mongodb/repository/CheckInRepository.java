@@ -8,6 +8,6 @@ public interface CheckInRepository extends ReactiveMongoRepository<CheckInEntity
 
     Flux<CheckInEntity> findByServiceStartDateIsNull();
 
-    Flux<CheckInEntity> findByPatientTaxIdAndServiceStartDateIsNull(String patientTaxId);
+    Flux<CheckInEntity> findByPatientIdAndServiceStartDateIsNull(String patientId);
 
 }
