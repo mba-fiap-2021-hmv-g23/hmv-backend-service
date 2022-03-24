@@ -37,5 +37,5 @@ public class PostLoginResponse {
 
     @ApiModelProperty(value = "ID do paciente.", required = true)
     private String patientId;
-    
+
 }

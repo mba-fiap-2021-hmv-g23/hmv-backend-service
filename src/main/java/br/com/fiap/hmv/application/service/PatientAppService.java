@@ -1,7 +1,6 @@
 package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.port.PatientPort;
-import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.Patient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

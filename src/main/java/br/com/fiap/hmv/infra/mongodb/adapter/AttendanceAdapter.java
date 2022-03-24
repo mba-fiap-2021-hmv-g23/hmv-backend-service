@@ -1,8 +1,10 @@
 package br.com.fiap.hmv.infra.mongodb.adapter;
 
 import br.com.fiap.hmv.application.port.AttendancePort;
+import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.User;
 import br.com.fiap.hmv.infra.mongodb.entity.AttendanceServiceEntity;
+import br.com.fiap.hmv.infra.mongodb.entity.CheckInCallServiceEntity;
 import br.com.fiap.hmv.infra.mongodb.repository.AttendanceServiceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,9 @@ import static br.com.fiap.hmv.infra.mongodb.entity.AttendanceServiceEntity.TTL_M
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.UUID.randomUUID;
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,6 +54,24 @@ public class AttendanceAdapter implements AttendancePort {
     public Flux<User> findAttendantsInService() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos usuários em serviço de atendimento base de dados.");
         return Flux.empty();
+    }
+
+    @Override
+    public Mono<Void> insertCallToStartAttendance(CheckIn checkIn) {
+        return mongoOperations.findAndModify(
+                        query(where("_id").is(checkIn.getCheckInId())),
+                        new Update()
+                                .set("patientId", checkIn.getPatient().getPatientId())
+                                .set("userId", checkIn.getAttendant().getUserId())
+                                .setOnInsert("inclusionDate", now())
+                                .setOnInsert("noShows", 0)
+                                .inc("calls", 1L),
+                        options().returnNew(true).upsert(true),
+                        CheckInCallServiceEntity.class)
+                .doOnSuccess(checkInCallServiceEntity -> {
+                    checkIn.setCalls(checkInCallServiceEntity.getCalls());
+                    checkIn.setNoShows(checkInCallServiceEntity.getNoShows());
+                }).then();
     }
 
     private Mono<Void> stopServicesByUserTaxId(String userTaxId) {

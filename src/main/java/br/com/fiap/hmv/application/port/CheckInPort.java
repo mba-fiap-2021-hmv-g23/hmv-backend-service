@@ -4,8 +4,6 @@ import br.com.fiap.hmv.domain.entity.CheckIn;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 public interface CheckInPort {
 
     Mono<Void> insert(final CheckIn checkIn);

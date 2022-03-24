@@ -38,12 +38,16 @@ public class JwtService {
                 .compact();
     }
 
-    public String getUsername(String accessToken) {
-        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_USERNAME, String.class);
+    public String getUserId(String accessToken) {
+        return getAllClaimsFromToken(accessToken).getSubject();
     }
 
     public String getTaxId(String accessToken) {
         return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_TAX_ID, String.class);
+    }
+
+    public String getUsername(String accessToken) {
+        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_USERNAME, String.class);
     }
 
     public String getFullName(String accessToken) {

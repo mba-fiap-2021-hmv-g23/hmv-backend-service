@@ -46,8 +46,8 @@ public class CheckInApi {
         );
         CheckIn checkIn = CheckInModelMapper.toCheckIn(jwtService.getTaxId(accessToken), request);
         return appService.checkIn(checkIn).thenReturn(checkIn).map(CheckInModelMapper::toPostCheckInResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API GET /v1/check-in] Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API GET /v1/check-in/] Finalizado com erro [{}].",
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/check-in] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/check-in] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
     }

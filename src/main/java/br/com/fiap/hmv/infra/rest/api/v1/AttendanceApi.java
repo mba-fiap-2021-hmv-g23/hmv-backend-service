@@ -3,6 +3,7 @@ package br.com.fiap.hmv.infra.rest.api.v1;
 import br.com.fiap.hmv.application.service.AttendanceAppService;
 import br.com.fiap.hmv.infra.rest.api.v1.mapper.AttendanceModelMapper;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceNextPatientResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceQueueCallsResponse;
 import br.com.fiap.hmv.security.JwtService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +42,12 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API POST /v1/attendances/services] Iniciando chamada ao app service para " +
                 "inserir jornada de serviço à pacientes."
         );
-        return appService.startServiceToPatient(jwtService.getTaxId(accessToken));
+        return appService.startServiceToPatient(jwtService.getTaxId(accessToken))
+                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/attendances/services] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/attendances/services] Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()
+                ));
+
     }
 
     @ApiOperation(value = "Encerrar jornada de serviço à pacientes.")
@@ -54,7 +60,11 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API DELETE /v1/attendances/services] Iniciando chamada ao app service para " +
                 "remover jornada de serviço à pacientes."
         );
-        return appService.stopServiceToPatient(jwtService.getTaxId(accessToken));
+        return appService.stopServiceToPatient(jwtService.getTaxId(accessToken))
+                .doOnSuccess(u -> log.info("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()
+                ));
     }
 
     @ApiOperation(
@@ -70,8 +80,30 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API GET /v1/attendances/next-patient] Iniciando chamada ao app service para " +
                 "iniciar chamada ao próximo paciente aguardando atendimento."
         );
-        return appService.nextPatientToAttendance(jwtService.getTaxId(accessToken))
-                .map(AttendanceModelMapper::toGetAttendanceNextPatientResponse);
+        return appService.nextPatientToAttendance(jwtService.getUserId(accessToken))
+                .map(AttendanceModelMapper::toGetAttendanceNextPatientResponse)
+                .doOnSuccess(u -> log.info("[INFRA_REST_API GET /v1/attendances/next-patient] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API GET /v1/attendances/next-patient] Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()
+                ));
+    }
+
+    @ApiOperation(
+            value = "Buscar fila de chamadas à pacientes.",
+            response = GetAttendanceNextPatientResponse.class
+    )
+    @GetMapping(path = "/queue-calls")
+    @ResponseStatus(OK)
+    public Mono<GetAttendanceQueueCallsResponse> getQueueCalls() {
+        log.info("[INFRA_REST_API GET /v1/attendances/queue-calls] Iniciando chamada ao app service buscar fila de " +
+                "pacientes aguardando atendimento."
+        );
+        return appService.findQueueCalls()
+                .map(AttendanceModelMapper::toGetAttendanceQueueCallsResponse)
+                .doOnSuccess(u -> log.info("[INFRA_REST_API GET /v1/attendances/next-patient] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API GET /v1/attendances/next-patient] Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()
+                ));
     }
 
 }

@@ -18,5 +18,10 @@ public class CheckIn {
     private LocalDateTime expiresDate;
     private LocalDateTime inclusionDate;
     private LocalDateTime serviceStartDate;
+    private Integer calls;
+    private String noShows;
+    private LocalDateTime lastCallDate;
+    private LocalDateTime blockCallUntilDate;
+    private LocalDateTime lastCallToStartDate;
 
 }
