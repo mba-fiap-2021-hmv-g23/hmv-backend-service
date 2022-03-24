@@ -3,14 +3,14 @@ package br.com.fiap.hmv.infra.rest.api.v1.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @ApiModel("PostCheckInResponseV1")
 @Getter
-@Builder
+@SuperBuilder
 public class PostCheckInResponse {
 
     @ApiModelProperty(value = "ID do Check-In.", required = true)

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.function.Function;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.time.LocalDateTime.parse;
@@ -18,9 +17,8 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 @Service("jwtService")
 public class JwtService {
 
-    private static final String CUSTOM_CLAIM_USERNAME = "username";
-    private static final String CUSTOM_CLAIM_TAX_ID = "taxId";
-    private static final String CUSTOM_CLAIM_FULL_NAME = "fullName";
+    private static final String CUSTOM_CLAIM_USER_TAX_ID = "userTaxId";
+    private static final String CUSTOM_CLAIM_PATIENT_ID = "patientId";
     private static final String CUSTOM_CLAIM_EXPIRES_IN = "expiresIn";
 
     @Value("${auth.jwt.secretKey:MY_SECRET_KEY}")
@@ -30,10 +28,9 @@ public class JwtService {
     public String generateAccessToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getUserId())
+                .claim(CUSTOM_CLAIM_USER_TAX_ID, user.getTaxId())
+                .claim(CUSTOM_CLAIM_PATIENT_ID, user.getPatientId())
                 .claim(CUSTOM_CLAIM_EXPIRES_IN, user.getAccessTokenExpiresIn().format(ISO_LOCAL_DATE_TIME))
-                .claim(CUSTOM_CLAIM_USERNAME, user.getUsername())
-                .claim(CUSTOM_CLAIM_TAX_ID, user.getTaxId())
-                .claim(CUSTOM_CLAIM_FULL_NAME, user.getFullName())
                 .signWith(HS512, secretKey)
                 .compact();
     }
@@ -42,17 +39,12 @@ public class JwtService {
         return getAllClaimsFromToken(accessToken).getSubject();
     }
 
-    public String getTaxId(String accessToken) {
-        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_TAX_ID, String.class);
+    public String getPatientId(String accessToken) {
+        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_PATIENT_ID, String.class);
     }
 
-    public String getUsername(String accessToken) {
-        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_USERNAME, String.class);
-    }
-
-    public String getFullName(String accessToken) {
-        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_FULL_NAME, String.class);
-
+    public String getUserTaxId(String accessToken) {
+        return getAllClaimsFromToken(accessToken).get(CUSTOM_CLAIM_USER_TAX_ID, String.class);
     }
 
     public LocalDateTime getExpiresIn(String accessToken) {
@@ -62,16 +54,11 @@ public class JwtService {
         );
     }
 
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        return claimsResolver.apply(getAllClaimsFromToken(token));
-    }
-
     private Claims getAllClaimsFromToken(String token) {
-        Claims claims = Jwts.parser()
+        return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token.replace("Bearer ", ""))
                 .getBody();
-        return claims;
     }
 
 }

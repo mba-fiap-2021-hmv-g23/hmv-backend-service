@@ -6,8 +6,6 @@ import reactor.core.publisher.Flux;
 
 public interface CheckInRepository extends ReactiveMongoRepository<CheckInEntity, String> {
 
-    Flux<CheckInEntity> findByServiceStartDateIsNull();
-
     Flux<CheckInEntity> findByPatientIdAndServiceStartDateIsNull(String patientId);
 
 }

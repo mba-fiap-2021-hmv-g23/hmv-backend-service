@@ -3,10 +3,12 @@ package br.com.fiap.hmv.infra.mongodb.adapter;
 import br.com.fiap.hmv.application.exception.HttpException;
 import br.com.fiap.hmv.application.port.CheckInPort;
 import br.com.fiap.hmv.domain.entity.CheckIn;
+import br.com.fiap.hmv.infra.mongodb.entity.CheckInEntity;
 import br.com.fiap.hmv.infra.mongodb.mapper.CheckInEntityMapper;
 import br.com.fiap.hmv.infra.mongodb.repository.CheckInRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,8 +17,11 @@ import static br.com.fiap.hmv.infra.mongodb.mapper.CheckInEntityMapper.toCheckIn
 import static java.time.Duration.ofSeconds;
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.HOURS;
+import static java.util.Comparator.comparing;
 import static java.util.Locale.ROOT;
 import static org.apache.commons.lang3.RandomStringUtils.random;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Slf4j
@@ -24,6 +29,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Component
 public class CheckInAdapter implements CheckInPort {
 
+    private final ReactiveMongoOperations mongoOperations;
     private final CheckInRepository checkInRepository;
 
     @Override
@@ -38,7 +44,6 @@ public class CheckInAdapter implements CheckInPort {
                     String endId = random(1, true, false).toUpperCase(ROOT);
                     checkIn.setExpiresDate(now().plus(4, HOURS));
                     checkIn.setCheckInId(beginId + "-" + middleId + endId);
-                    checkIn.setInclusionDate(now());
                     return checkInRepository.insert(toCheckInEntity(checkIn)).onErrorResume(t -> {
                         log.error("[INFRA_MONGODB_ADAPTER] Erro de inclusão do check-in. [{}].",
                                 t.getLocalizedMessage());
@@ -54,9 +59,16 @@ public class CheckInAdapter implements CheckInPort {
     }
 
     @Override
+    public Mono<CheckIn> getById(String checkInId) {
+        return checkInRepository.findById(checkInId).map(CheckInEntityMapper::toCheckIn);
+    }
+
+    @Override
     public Flux<CheckIn> findAwaitingAttendance() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos check-ins aguardando o atendimento na base de dados.");
-        return checkInRepository.findByServiceStartDateIsNull().map(CheckInEntityMapper::toCheckIn);
+        return mongoOperations.find(query(where("serviceStartDate").isNull()), CheckInEntity.class)
+                .map(CheckInEntityMapper::toCheckIn)
+                .sort(comparing(CheckIn::getServiceStartBaseDate));
     }
 
 }

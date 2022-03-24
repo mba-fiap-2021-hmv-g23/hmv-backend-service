@@ -22,11 +22,11 @@ public class CheckInCallServiceEntity {
     private String userId;
     private Integer calls;
     private String noShows;
-
-    @Indexed(name = "checkInCallService.ttl.index", expireAfterSeconds = 0)
     private LocalDateTime inclusionDate;
-
     private LocalDateTime updateDate;
     private LocalDateTime blockCallUntilDate;
+
+    @Indexed(name = "checkInCallService.ttl.index", expireAfterSeconds = 0)
+    private LocalDateTime ttl;
 
 }

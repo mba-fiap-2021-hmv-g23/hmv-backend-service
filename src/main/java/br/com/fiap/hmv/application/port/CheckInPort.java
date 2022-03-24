@@ -10,6 +10,8 @@ public interface CheckInPort {
 
     Mono<Void> update(final CheckIn checkIn);
 
+    Mono<CheckIn> getById(String checkInId);
+
     Flux<CheckIn> findAwaitingAttendance();
 
 }

@@ -2,6 +2,7 @@ package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.port.AttendancePort;
 import br.com.fiap.hmv.application.port.CheckInPort;
+import br.com.fiap.hmv.application.port.PatientPort;
 import br.com.fiap.hmv.domain.entity.AttendanceQueueCalls;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.User;
@@ -19,6 +20,7 @@ public class AttendanceAppService {
 
     private final AttendancePort attendancePort;
     private final CheckInPort checkInPort;
+    private final PatientPort patientPort;
 
     public Mono<Void> startServiceToPatient(String userTaxId) {
         log.info("[APPLICATION_SERVICE] Iniciando jornada do usuário de atendimento à pacientes.");
@@ -37,7 +39,10 @@ public class AttendanceAppService {
             if (checkInOpt.isPresent()) {
                 CheckIn checkIn = checkInOpt.get();
                 checkIn.setAttendant(User.builder().userId(userId).build());
-                return attendancePort.insertCallToStartAttendance(checkIn).thenReturn(checkIn);
+                return patientPort.get(checkIn.getPatient().getPatientId()).flatMap(patient -> {
+                    checkIn.setPatient(patient);
+                    return attendancePort.insertCallToStartAttendance(checkIn).thenReturn(checkIn);
+                });
             }
             return Mono.empty();
         });

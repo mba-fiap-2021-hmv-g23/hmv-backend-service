@@ -4,6 +4,7 @@ import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.Patient;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PutCheckInResponse;
 
 public class CheckInModelMapper {
 
@@ -18,6 +19,14 @@ public class CheckInModelMapper {
 
     public static PostCheckInResponse toPostCheckInResponse(CheckIn checkIn) {
         return PostCheckInResponse.builder()
+                .checkInId(checkIn.getCheckInId())
+                .checkInDate(checkIn.getInclusionDate())
+                .expiresDate(checkIn.getExpiresDate())
+                .build();
+    }
+
+    public static PutCheckInResponse toPutCheckInResponse(CheckIn checkIn) {
+        return PutCheckInResponse.builder()
                 .checkInId(checkIn.getCheckInId())
                 .checkInDate(checkIn.getInclusionDate())
                 .expiresDate(checkIn.getExpiresDate())

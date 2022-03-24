@@ -61,10 +61,11 @@ public class AttendanceAdapter implements AttendancePort {
         return mongoOperations.findAndModify(
                         query(where("_id").is(checkIn.getCheckInId())),
                         new Update()
-                                .set("patientId", checkIn.getPatient().getPatientId())
-                                .set("userId", checkIn.getAttendant().getUserId())
+                                .setOnInsert("patientId", checkIn.getPatient().getPatientId())
                                 .setOnInsert("inclusionDate", now())
                                 .setOnInsert("noShows", 0)
+                                .setOnInsert("ttl", now().plusHours(48))
+                                .set("userId", checkIn.getAttendant().getUserId())
                                 .inc("calls", 1L),
                         options().returnNew(true).upsert(true),
                         CheckInCallServiceEntity.class)

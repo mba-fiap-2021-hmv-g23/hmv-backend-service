@@ -42,7 +42,7 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API POST /v1/attendances/services] Iniciando chamada ao app service para " +
                 "inserir jornada de serviço à pacientes."
         );
-        return appService.startServiceToPatient(jwtService.getTaxId(accessToken))
+        return appService.startServiceToPatient(jwtService.getUserTaxId(accessToken))
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/attendances/services] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/attendances/services] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
@@ -60,7 +60,7 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API DELETE /v1/attendances/services] Iniciando chamada ao app service para " +
                 "remover jornada de serviço à pacientes."
         );
-        return appService.stopServiceToPatient(jwtService.getTaxId(accessToken))
+        return appService.stopServiceToPatient(jwtService.getUserTaxId(accessToken))
                 .doOnSuccess(u -> log.info("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
