@@ -49,7 +49,13 @@ public class AttendanceAppService {
     }
 
     public Mono<AttendanceQueueCalls> findQueueCalls() {
-        return checkInPort.findAwaitingAttendance().collectList()
+        return checkInPort.findAwaitingAttendance()
+                .flatMap(checkIn -> patientPort.get(checkIn.getPatient().getPatientId())
+                        .flatMap(patient -> {
+                            checkIn.setPatient(patient);
+                            return Mono.just(checkIn);
+                        }))
+                .collectList()
                 .flatMap(awaitingAttendanceList -> Mono.just(AttendanceQueueCalls.builder()
                         .awaitingCall(awaitingAttendanceList)
                         .build()));
