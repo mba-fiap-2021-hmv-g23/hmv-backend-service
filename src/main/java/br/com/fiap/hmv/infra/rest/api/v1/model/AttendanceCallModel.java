@@ -1,6 +1,7 @@
 package br.com.fiap.hmv.infra.rest.api.v1.model;
 
 import br.com.fiap.hmv.domain.type.Genre;
+import br.com.fiap.hmv.domain.type.RiskClassification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,6 @@ public class AttendanceCallModel {
     private String age;
 
     @ApiModelProperty(value = "Classificação do risco do paciente.", required = true)
-    private String classification;
+    private RiskClassification riskClassification;
 
 }

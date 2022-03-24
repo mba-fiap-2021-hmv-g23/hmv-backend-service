@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import static br.com.fiap.hmv.infra.rest.api.v1.mapper.CheckInModelMapper.toCheckIn;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -44,7 +45,7 @@ public class CheckInApi {
         log.info("[INFRA_REST_API POST /v1/check-in] Iniciando chamada ao app service para realizar o check-in " +
                 "do paciente."
         );
-        CheckIn checkIn = CheckInModelMapper.toCheckIn(jwtService.getUserId(accessToken), request);
+        CheckIn checkIn = toCheckIn(jwtService.getUserId(accessToken), request);
         return appService.checkIn(checkIn).thenReturn(checkIn).map(CheckInModelMapper::toPostCheckInResponse)
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/check-in] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/check-in] Finalizado com erro [{}].",

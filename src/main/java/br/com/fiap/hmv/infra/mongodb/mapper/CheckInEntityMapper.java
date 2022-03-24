@@ -13,10 +13,12 @@ public class CheckInEntityMapper {
     public static CheckInEntity toCheckInEntity(CheckIn checkIn) {
         return CheckInEntity.builder()
                 .checkInId(checkIn.getCheckInId())
-                .patientId(checkIn.getPatient().getTaxId())
+                .patientId(checkIn.getPatient().getPatientId())
                 .inclusionDate(checkIn.getInclusionDate())
                 .expiresDate(checkIn.getExpiresDate())
                 .estimatedTimeArrival(checkIn.getEstimatedTimeArrival())
+                .riskClassification(checkIn.getRiskClassification())
+                .serviceStartBaseDate(checkIn.getServiceStartBaseDate())
                 .ttl(now().plus(TTL_MINUTES, MINUTES))
                 .build();
     }
@@ -28,6 +30,8 @@ public class CheckInEntityMapper {
                 .inclusionDate(checkInEntity.getInclusionDate())
                 .expiresDate(checkInEntity.getExpiresDate())
                 .estimatedTimeArrival(checkInEntity.getEstimatedTimeArrival())
+                .riskClassification(checkInEntity.getRiskClassification())
+                .serviceStartBaseDate(checkInEntity.getServiceStartBaseDate())
                 .build();
     }
 

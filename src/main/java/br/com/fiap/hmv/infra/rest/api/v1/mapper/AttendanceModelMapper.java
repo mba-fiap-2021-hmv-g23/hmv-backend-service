@@ -47,7 +47,7 @@ public class AttendanceModelMapper {
                 .fullName(checkIn.getPatient().getFullName())
                 .age(getTextAge(checkIn.getPatient().getBirthDate()))
                 .genre(checkIn.getPatient().getGenre())
-                .classification("EMERGÊNCIA")
+                .riskClassification(checkIn.getRiskClassification())
                 .build();
     }
 

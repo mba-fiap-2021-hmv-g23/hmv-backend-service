@@ -7,10 +7,10 @@ import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
 
 public class CheckInModelMapper {
 
-    public static CheckIn toCheckIn(String userTaxId, PostCheckInRequest request) {
+    public static CheckIn toCheckIn(String patientId, PostCheckInRequest request) {
         return CheckIn.builder()
                 .patient(Patient.builder()
-                        .taxId(userTaxId)
+                        .patientId(patientId)
                         .build())
                 .estimatedTimeArrival(request.getEstimatedTimeArrival())
                 .build();
