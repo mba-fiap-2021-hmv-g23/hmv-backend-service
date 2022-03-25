@@ -8,6 +8,7 @@ import br.com.fiap.hmv.infra.mongodb.mapper.CheckInEntityMapper;
 import br.com.fiap.hmv.infra.mongodb.repository.CheckInRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -17,7 +18,6 @@ import static br.com.fiap.hmv.infra.mongodb.mapper.CheckInEntityMapper.toCheckIn
 import static java.time.Duration.ofSeconds;
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.HOURS;
-import static java.util.Comparator.comparing;
 import static java.util.Locale.ROOT;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -64,11 +64,21 @@ public class CheckInAdapter implements CheckInPort {
     }
 
     @Override
+    public Mono<CheckIn> findNextAwaitingAttendance(String userId) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do próximo paciente aguardando atendimento.");
+        return mongoOperations.findOne(
+                query(where("serviceStartDate").isNull()).with(Sort.by("serviceStartBaseDate")).limit(1),
+                CheckInEntity.class
+        ).map(CheckInEntityMapper::toCheckIn);
+    }
+
+    @Override
     public Flux<CheckIn> findAwaitingAttendance() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos check-ins aguardando o atendimento na base de dados.");
-        return mongoOperations.find(query(where("serviceStartDate").isNull()), CheckInEntity.class)
-                .map(CheckInEntityMapper::toCheckIn)
-                .sort(comparing(CheckIn::getServiceStartBaseDate));
+        return mongoOperations.find(
+                query(where("serviceStartDate").isNull()),
+                CheckInEntity.class
+        ).map(CheckInEntityMapper::toCheckIn);
     }
 
 }
