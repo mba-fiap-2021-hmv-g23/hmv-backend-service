@@ -37,6 +37,7 @@ public class CheckInEntityMapper {
                 )
                 .calls(checkInEntity.getCalls())
                 .noShows(checkInEntity.getNoShows())
+                .lastCallDate(checkInEntity.getLastCallDate())
                 .reservedAttendantDate(checkInEntity.getReservedAttendantDate())
                 .inclusionDate(checkInEntity.getInclusionDate())
                 .expiresDate(checkInEntity.getExpiresDate())

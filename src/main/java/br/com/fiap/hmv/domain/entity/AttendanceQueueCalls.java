@@ -14,7 +14,6 @@ public class AttendanceQueueCalls {
 
     private List<CheckIn> inCall;
     private List<CheckIn> lastCalls;
-    private List<CheckIn> pendingCall;
     private List<CheckIn> awaitingCall;
 
     public List<CheckIn> getInCall() {
@@ -23,10 +22,6 @@ public class AttendanceQueueCalls {
 
     public List<CheckIn> getLastCalls() {
         return requireNonNullElse(lastCalls, new ArrayList<>());
-    }
-
-    public List<CheckIn> getPendingCall() {
-        return requireNonNullElse(pendingCall, new ArrayList<>());
     }
 
     public List<CheckIn> getAwaitingCall() {

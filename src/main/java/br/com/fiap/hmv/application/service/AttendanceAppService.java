@@ -15,8 +15,6 @@ import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -52,6 +50,7 @@ public class AttendanceAppService {
             } else {
                 checkIn.setReservedAttendantDate(now().plusSeconds(60));
                 checkIn.setCalls(checkIn.getCalls() + 1);
+                checkIn.setLastCallDate(now());
                 return checkInPort.updateStartAttendance(checkIn).thenReturn(checkIn);
             }
         }).flatMap(checkIn -> patientPort.get(checkIn.getPatient().getPatientId()).flatMap(patient -> {
@@ -82,9 +81,6 @@ public class AttendanceAppService {
                         .filter(this::filterLastCalls)
                         .limit(10)
                         .collect(toList()))
-                .pendingCall(awaitingAttendanceList.stream()
-                        .sorted(comparing(CheckIn::getServiceStartBaseDate))
-                        .filter(this::filterPendingCall).collect(toList()))
                 .awaitingCall(awaitingAttendanceList.stream()
                         .sorted(comparing(CheckIn::getServiceStartBaseDate))
                         .filter(this::filterAwaitingCall).collect(toList()))
@@ -92,22 +88,15 @@ public class AttendanceAppService {
     }
 
     private boolean filterInCall(CheckIn checkIn) {
-        return checkIn.getCalls() > 0
-                && nonNull(checkIn.getAttendant())
-                && nonNull(checkIn.getReservedAttendantDate())
-                && now().isBefore(checkIn.getReservedAttendantDate());
+        return checkIn.getCalls() >= 1;
     }
 
     private boolean filterLastCalls(CheckIn checkIn) {
-        return checkIn.getCalls() == 0 && checkIn.getNoShows() > 0 && nonNull(checkIn.getAttendant());
-    }
-
-    private boolean filterPendingCall(CheckIn checkIn) {
-        return isNull(checkIn.getAttendant());
+        return checkIn.getNoShows() >= 1 && checkIn.getCalls() == 0;
     }
 
     private boolean filterAwaitingCall(CheckIn checkIn) {
-        return filterPendingCall(checkIn) || filterLastCalls(checkIn);
+        return checkIn.getCalls() == 0;
     }
 
 }

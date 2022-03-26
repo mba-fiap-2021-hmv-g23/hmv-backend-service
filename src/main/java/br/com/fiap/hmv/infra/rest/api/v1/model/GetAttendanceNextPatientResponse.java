@@ -45,4 +45,8 @@ public class GetAttendanceNextPatientResponse {
     @ApiModelProperty(value = "Data de expiração do Check-In.", required = true)
     private LocalDateTime expiresDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "Data da última chamada do paciente à atendimento.")
+    private LocalDateTime lastCallDate;
+
 }

@@ -22,6 +22,7 @@ public class AttendanceModelMapper {
                 .genre(checkIn.getPatient().getGenre())
                 .checkInDate(checkIn.getInclusionDate())
                 .expiresDate(checkIn.getExpiresDate())
+                .lastCallDate(checkIn.getLastCallDate())
                 .build();
     }
 
@@ -33,9 +34,6 @@ public class AttendanceModelMapper {
                         .map(AttendanceModelMapper::toAttendanceCallModel)
                         .collect(toList()))
                 .lastCalls(attendanceQueueCalls.getLastCalls().stream()
-                        .map(AttendanceModelMapper::toAttendanceCallModel)
-                        .collect(toList()))
-                .pendingCall(attendanceQueueCalls.getPendingCall().stream()
                         .map(AttendanceModelMapper::toAttendanceCallModel)
                         .collect(toList()))
                 .awaitingCall(attendanceQueueCalls.getAwaitingCall().stream()
@@ -51,6 +49,7 @@ public class AttendanceModelMapper {
                 .age(getTextAge(checkIn.getPatient().getBirthDate()))
                 .genre(checkIn.getPatient().getGenre())
                 .riskClassification(checkIn.getRiskClassification())
+                .lastCallDate(checkIn.getLastCallDate())
                 .build();
     }
 

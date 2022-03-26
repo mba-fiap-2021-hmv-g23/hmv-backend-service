@@ -20,10 +20,13 @@ public class CheckIn {
     private Integer noShows;
     private EstimatedTimeArrival estimatedTimeArrival;
     private RiskClassification riskClassification;
+    private LocalDateTime lastCallDate;
     private LocalDateTime expiresDate;
     private LocalDateTime inclusionDate;
     private LocalDateTime serviceStartDate;
     private LocalDateTime serviceStartBaseDate;
     private LocalDateTime reservedAttendantDate;
+    private LocalDateTime cancellationDate;
+    private String cancellationReason;
 
 }

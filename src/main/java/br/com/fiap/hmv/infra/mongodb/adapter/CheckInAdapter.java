@@ -69,8 +69,11 @@ public class CheckInAdapter implements CheckInPort {
     public Mono<CheckIn> findNextAwaitingAttendance(String attendanceId) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do próximo paciente aguardando atendimento.");
         return mongoOperations.findOne(
-                query(where("serviceStartDate").isNull().andOperator(getReservedAttendantCriteria(attendanceId)))
-                        .with(Sort.by("serviceStartBaseDate")).limit(1),
+                query(where("serviceStartDate").isNull()
+                        .and("cancellationDate").isNull()
+                        .and("expiresDate").gte(now())
+                        .andOperator(getReservedAttendantCriteria(attendanceId))
+                ).with(Sort.by("serviceStartBaseDate")).limit(1),
                 CheckInEntity.class
         ).map(CheckInEntityMapper::toCheckIn);
     }
@@ -82,6 +85,7 @@ public class CheckInAdapter implements CheckInPort {
                 new Update()
                         .set("calls", checkIn.getCalls())
                         .set("noShows", checkIn.getNoShows())
+                        .set("lastCallDate", checkIn.getLastCallDate())
                         .set("attendantId", checkIn.getAttendant().getUserId())
                         .set("serviceStartBaseDate", checkIn.getServiceStartBaseDate())
                         .set("reservedAttendantDate", checkIn.getReservedAttendantDate()),
@@ -93,7 +97,9 @@ public class CheckInAdapter implements CheckInPort {
     public Flux<CheckIn> findAwaitingAttendance() {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos check-ins aguardando o atendimento na base de dados.");
         return mongoOperations.find(
-                query(where("serviceStartDate").isNull()),
+                query(where("serviceStartDate").isNull()
+                        .and("cancellationDate").isNull()
+                        .and("expiresDate").gte(now())),
                 CheckInEntity.class
         ).map(CheckInEntityMapper::toCheckIn);
     }

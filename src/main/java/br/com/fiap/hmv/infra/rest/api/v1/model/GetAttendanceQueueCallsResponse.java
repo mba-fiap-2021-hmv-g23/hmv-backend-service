@@ -27,13 +27,6 @@ public class GetAttendanceQueueCallsResponse {
     private List<AttendanceCallModel> lastCalls;
 
     @ApiModelProperty(
-            value = "Pacientes aguardando chamada à atendimento.",
-            required = true,
-            allowEmptyValue = true
-    )
-    private List<AttendanceCallModel> pendingCall;
-
-    @ApiModelProperty(
             value = "Fila das próximas chamadas à atendimento (novas chamadas e re-chamadas).",
             required = true,
             allowEmptyValue = true

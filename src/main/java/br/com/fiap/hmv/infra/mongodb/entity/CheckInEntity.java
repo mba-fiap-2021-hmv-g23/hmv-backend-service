@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class CheckInEntity {
 
     @Transient
-    public static final long TTL_MINUTES = 60 * 24 * 2;
+    public static final long TTL_MINUTES = 60 * 24 * 7;
 
     @Id
     private String checkInId;
@@ -29,11 +29,14 @@ public class CheckInEntity {
     private Integer noShows;
     private EstimatedTimeArrival estimatedTimeArrival;
     private RiskClassification riskClassification;
+    private LocalDateTime lastCallDate;
     private LocalDateTime serviceStartDate;
     private LocalDateTime serviceStartBaseDate;
     private LocalDateTime inclusionDate;
     private LocalDateTime expiresDate;
     private LocalDateTime reservedAttendantDate;
+    private LocalDateTime cancellationDate;
+    private String cancellationReason;
 
     @Indexed(name = "checkIn.ttl.index", expireAfterSeconds = 0)
     private LocalDateTime ttl;
