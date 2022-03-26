@@ -23,14 +23,17 @@ public class CheckInEntity {
 
     @Id
     private String checkInId;
-
     private String patientId;
+    private String attendantId;
+    private Integer calls;
+    private Integer noShows;
     private EstimatedTimeArrival estimatedTimeArrival;
     private RiskClassification riskClassification;
     private LocalDateTime serviceStartDate;
     private LocalDateTime serviceStartBaseDate;
     private LocalDateTime inclusionDate;
     private LocalDateTime expiresDate;
+    private LocalDateTime reservedAttendantDate;
 
     @Indexed(name = "checkIn.ttl.index", expireAfterSeconds = 0)
     private LocalDateTime ttl;

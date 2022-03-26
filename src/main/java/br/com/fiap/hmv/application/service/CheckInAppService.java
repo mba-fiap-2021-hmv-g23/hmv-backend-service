@@ -34,6 +34,8 @@ public class CheckInAppService {
                 .plus(riskClassification.getMinutes(), MINUTES)
                 .plus(checkIn.getEstimatedTimeArrival().getMinutes(), MINUTES));
         checkIn.setInclusionDate(now);
+        checkIn.setCalls(0);
+        checkIn.setNoShows(0);
         return checkInPort.insert(checkIn);
     }
 

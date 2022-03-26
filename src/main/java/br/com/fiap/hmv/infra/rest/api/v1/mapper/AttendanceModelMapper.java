@@ -29,13 +29,16 @@ public class AttendanceModelMapper {
             AttendanceQueueCalls attendanceQueueCalls
     ) {
         return GetAttendanceQueueCallsResponse.builder()
-                .lastCalls(attendanceQueueCalls.getAwaitingCall().stream()
-                        .map(AttendanceModelMapper::toAttendanceCallModel)
-                        .collect(toList()))
                 .inCall(attendanceQueueCalls.getInCall().stream()
                         .map(AttendanceModelMapper::toAttendanceCallModel)
                         .collect(toList()))
-                .awaitingCall(attendanceQueueCalls.getLastCalls().stream()
+                .lastCalls(attendanceQueueCalls.getLastCalls().stream()
+                        .map(AttendanceModelMapper::toAttendanceCallModel)
+                        .collect(toList()))
+                .pendingCall(attendanceQueueCalls.getPendingCall().stream()
+                        .map(AttendanceModelMapper::toAttendanceCallModel)
+                        .collect(toList()))
+                .awaitingCall(attendanceQueueCalls.getAwaitingCall().stream()
                         .map(AttendanceModelMapper::toAttendanceCallModel)
                         .collect(toList()))
                 .build();

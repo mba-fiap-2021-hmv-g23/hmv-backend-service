@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -64,12 +66,27 @@ public class CheckInAdapter implements CheckInPort {
     }
 
     @Override
-    public Mono<CheckIn> findNextAwaitingAttendance(String userId) {
+    public Mono<CheckIn> findNextAwaitingAttendance(String attendanceId) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do próximo paciente aguardando atendimento.");
         return mongoOperations.findOne(
-                query(where("serviceStartDate").isNull()).with(Sort.by("serviceStartBaseDate")).limit(1),
+                query(where("serviceStartDate").isNull().andOperator(getReservedAttendantCriteria(attendanceId)))
+                        .with(Sort.by("serviceStartBaseDate")).limit(1),
                 CheckInEntity.class
         ).map(CheckInEntityMapper::toCheckIn);
+    }
+
+    @Override
+    public Mono<Void> updateStartAttendance(CheckIn checkIn) {
+        return mongoOperations.findAndModify(
+                query(where("_id").is(checkIn.getCheckInId())),
+                new Update()
+                        .set("calls", checkIn.getCalls())
+                        .set("noShows", checkIn.getNoShows())
+                        .set("attendantId", checkIn.getAttendant().getUserId())
+                        .set("serviceStartBaseDate", checkIn.getServiceStartBaseDate())
+                        .set("reservedAttendantDate", checkIn.getReservedAttendantDate()),
+                CheckInEntity.class
+        ).then();
     }
 
     @Override
@@ -79,6 +96,13 @@ public class CheckInAdapter implements CheckInPort {
                 query(where("serviceStartDate").isNull()),
                 CheckInEntity.class
         ).map(CheckInEntityMapper::toCheckIn);
+    }
+
+    private Criteria getReservedAttendantCriteria(String attendanceId) {
+        return new Criteria().orOperator(
+                new Criteria("reservedAttendantDate").isNull(),
+                new Criteria("reservedAttendantDate").lte(now()),
+                new Criteria("reservedAttendantDate").gt(now()).and("attendantId").is(attendanceId));
     }
 
 }

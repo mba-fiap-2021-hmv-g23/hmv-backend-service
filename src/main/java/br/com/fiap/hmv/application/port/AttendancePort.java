@@ -11,8 +11,4 @@ public interface AttendancePort {
 
     Mono<Void> stopServiceToPatient(String userTaxId);
 
-    Flux<User> findAttendantsInService();
-
-    Mono<Void> insertCallToStartAttendance(CheckIn checkIn);
-
 }

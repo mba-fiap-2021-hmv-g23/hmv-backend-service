@@ -12,7 +12,9 @@ public interface CheckInPort {
 
     Mono<CheckIn> getById(String checkInId);
 
-    Mono<CheckIn> findNextAwaitingAttendance(String userId);
+    Mono<CheckIn> findNextAwaitingAttendance(String attendanceId);
+
+    Mono<Void> updateStartAttendance(CheckIn checkIn);
 
     Flux<CheckIn> findAwaitingAttendance();
 

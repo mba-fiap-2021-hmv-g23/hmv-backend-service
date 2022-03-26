@@ -12,13 +12,32 @@ import java.util.List;
 @Builder
 public class GetAttendanceQueueCallsResponse {
 
-    @ApiModelProperty(value = "ID do Check-In.", required = true, allowEmptyValue = true)
-    private List<AttendanceCallModel> lastCalls;
-
-    @ApiModelProperty(value = "ID do Check-In.", required = true, allowEmptyValue = true)
+    @ApiModelProperty(
+            value = "Pacientes com chamada ativa para atendimento.",
+            required = true,
+            allowEmptyValue = true
+    )
     private List<AttendanceCallModel> inCall;
 
-    @ApiModelProperty(value = "ID do Check-In.", required = true, allowEmptyValue = true)
+    @ApiModelProperty(
+            value = "Pacientes não se apresentaram para atendimento (últimos 10 mais recentes).",
+            required = true,
+            allowEmptyValue = true
+    )
+    private List<AttendanceCallModel> lastCalls;
+
+    @ApiModelProperty(
+            value = "Pacientes aguardando chamada à atendimento.",
+            required = true,
+            allowEmptyValue = true
+    )
+    private List<AttendanceCallModel> pendingCall;
+
+    @ApiModelProperty(
+            value = "Fila das próximas chamadas à atendimento (novas chamadas e re-chamadas).",
+            required = true,
+            allowEmptyValue = true
+    )
     private List<AttendanceCallModel> awaitingCall;
 
 }

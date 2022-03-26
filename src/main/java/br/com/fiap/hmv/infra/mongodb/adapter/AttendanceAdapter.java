@@ -50,31 +50,6 @@ public class AttendanceAdapter implements AttendancePort {
         return stopServicesByUserTaxId(userTaxId);
     }
 
-    @Override
-    public Flux<User> findAttendantsInService() {
-        log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca dos usuários em serviço de atendimento base de dados.");
-        return Flux.empty();
-    }
-
-    @Override
-    public Mono<Void> insertCallToStartAttendance(CheckIn checkIn) {
-        return mongoOperations.findAndModify(
-                        query(where("_id").is(checkIn.getCheckInId())),
-                        new Update()
-                                .setOnInsert("patientId", checkIn.getPatient().getPatientId())
-                                .setOnInsert("inclusionDate", now())
-                                .setOnInsert("noShows", 0)
-                                .setOnInsert("ttl", now().plusHours(48))
-                                .set("userId", checkIn.getAttendant().getUserId())
-                                .inc("calls", 1L),
-                        options().returnNew(true).upsert(true),
-                        CheckInCallServiceEntity.class)
-                .doOnSuccess(checkInCallServiceEntity -> {
-                    checkIn.setCalls(checkInCallServiceEntity.getCalls());
-                    checkIn.setNoShows(checkInCallServiceEntity.getNoShows());
-                }).then();
-    }
-
     private Mono<Void> stopServicesByUserTaxId(String userTaxId) {
         return mongoOperations.updateMulti(
                 new Query(new Criteria("userTaxId").is(userTaxId).and("endDate").isNull()),

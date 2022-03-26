@@ -16,16 +16,14 @@ public class CheckIn {
     private String checkInId;
     private Patient patient;
     private User attendant;
+    private Integer calls;
+    private Integer noShows;
     private EstimatedTimeArrival estimatedTimeArrival;
     private RiskClassification riskClassification;
     private LocalDateTime expiresDate;
     private LocalDateTime inclusionDate;
     private LocalDateTime serviceStartDate;
     private LocalDateTime serviceStartBaseDate;
-    private Integer calls;
-    private String noShows;
-    private LocalDateTime lastCallDate;
-    private LocalDateTime blockCallUntilDate;
-    private LocalDateTime lastCallToStartDate;
+    private LocalDateTime reservedAttendantDate;
 
 }
