@@ -45,6 +45,12 @@ public class UserAdapter implements UserPort {
     }
 
     @Override
+    public Mono<User> findById(String userId) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando consulta de usuário na base de dados por ID.");
+        return userRepository.findById(userId).map(UserEntityMapper::toUser);
+    }
+
+    @Override
     public Mono<User> findByLogin(String username, String taxId) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando consulta de usuário na base de dados por nome de usuário ou CPF.");
         return userRepository.findByUsernameOrTaxId(username, taxId).map(UserEntityMapper::toUser);
@@ -54,4 +60,5 @@ public class UserAdapter implements UserPort {
     public Mono<User> findByRefreshToken(String refreshToken) {
         return userRepository.findByRefreshToken(refreshToken).map(UserEntityMapper::toUser);
     }
+    
 }

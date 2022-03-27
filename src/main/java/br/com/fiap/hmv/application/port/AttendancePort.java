@@ -1,14 +1,12 @@
 package br.com.fiap.hmv.application.port;
 
-import br.com.fiap.hmv.domain.entity.CheckIn;
-import br.com.fiap.hmv.domain.entity.User;
-import reactor.core.publisher.Flux;
+import br.com.fiap.hmv.domain.entity.AttendanceService;
 import reactor.core.publisher.Mono;
 
 public interface AttendancePort {
 
-    Mono<Void> startServiceToPatient(String userTaxId);
+    Mono<Void> startAttendanceService(AttendanceService attendanceService);
 
-    Mono<Void> stopServiceToPatient(String userTaxId);
+    Mono<Void> stopAttendanceService(String attendanceId);
 
 }

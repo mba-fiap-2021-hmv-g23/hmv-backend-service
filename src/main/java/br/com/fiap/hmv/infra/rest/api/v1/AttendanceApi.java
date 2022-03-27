@@ -4,6 +4,7 @@ import br.com.fiap.hmv.application.service.AttendanceAppService;
 import br.com.fiap.hmv.infra.rest.api.v1.mapper.AttendanceModelMapper;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceNextPatientResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceQueueCallsResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.PostStartServiceRequest;
 import br.com.fiap.hmv.security.JwtService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,12 +41,14 @@ public class AttendanceApi {
     @ResponseStatus(NO_CONTENT)
     public Mono<Void> postStartService(
             @ApiParam(value = "Token de acesso.", required = true)
-            @RequestHeader("Authorization") String accessToken
+            @RequestHeader("Authorization") String accessToken,
+            @ApiParam(value = "Dados para iniciar serviço no balcão de atendimentos.")
+            @RequestBody PostStartServiceRequest request
     ) {
         log.info("[INFRA_REST_API POST /v1/attendances/services] Iniciando chamada ao app service para " +
                 "inserir jornada de serviço à pacientes."
         );
-        return appService.startAttendanceService(jwtService.getUserTaxId(accessToken))
+        return appService.startAttendanceService(request.getServiceDesk(), jwtService.getUserId(accessToken))
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/attendances/services] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/attendances/services] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
@@ -62,7 +66,7 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API DELETE /v1/attendances/services] Iniciando chamada ao app service para " +
                 "remover jornada de serviço à pacientes."
         );
-        return appService.stopAttendanceService(jwtService.getUserTaxId(accessToken))
+        return appService.stopAttendanceService(jwtService.getUserId(accessToken))
                 .doOnSuccess(u -> log.info("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()

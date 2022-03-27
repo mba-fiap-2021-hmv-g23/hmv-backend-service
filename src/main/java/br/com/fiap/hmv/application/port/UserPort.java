@@ -9,6 +9,8 @@ public interface UserPort {
 
     Mono<Void> updateSession(final User user);
 
+    Mono<User> findById(String userId);
+
     Mono<User> findByLogin(String username, String taxId);
 
     Mono<User> findByRefreshToken(String refreshToken);

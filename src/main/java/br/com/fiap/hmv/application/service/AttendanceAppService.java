@@ -3,7 +3,9 @@ package br.com.fiap.hmv.application.service;
 import br.com.fiap.hmv.application.port.AttendancePort;
 import br.com.fiap.hmv.application.port.CheckInPort;
 import br.com.fiap.hmv.application.port.PatientPort;
+import br.com.fiap.hmv.application.port.UserPort;
 import br.com.fiap.hmv.domain.entity.AttendanceQueueCalls;
+import br.com.fiap.hmv.domain.entity.AttendanceService;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +26,21 @@ public class AttendanceAppService {
 
     private final AttendancePort attendancePort;
     private final CheckInPort checkInPort;
+    private final UserPort userPort;
     private final PatientPort patientPort;
 
-    public Mono<Void> startAttendanceService(String userTaxId) {
+    public Mono<Void> startAttendanceService(String serviceDesk, String attendantId) {
         log.info("[APPLICATION_SERVICE] Iniciando jornada do usuário de atendimento à pacientes.");
-        return attendancePort.startServiceToPatient(userTaxId);
+        return userPort.findById(attendantId)
+                .flatMap(user -> attendancePort.startAttendanceService(AttendanceService.builder()
+                        .serviceDesk(serviceDesk)
+                        .attendant(user)
+                        .build())).then();
     }
 
-    public Mono<Void> stopAttendanceService(String userTaxId) {
+    public Mono<Void> stopAttendanceService(String attendanceId) {
         log.info("[APPLICATION_SERVICE] Encerrando jornada do usuário de atendimento à pacientes.");
-        return attendancePort.stopServiceToPatient(userTaxId);
+        return attendancePort.stopAttendanceService(attendanceId);
     }
 
     public Mono<CheckIn> nextPatientToAttendance(String userId) {
@@ -102,5 +109,5 @@ public class AttendanceAppService {
     private boolean filterAwaitingCall(CheckIn checkIn) {
         return checkIn.getCalls() == 0;
     }
-    
+
 }
