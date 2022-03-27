@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,7 +81,7 @@ public class CheckInApi {
     }
 
     @ApiOperation(value = "Cancelar Check-in", response = PutCheckInResponse.class)
-    @PutMapping(path = "/{checkInId}/cancel", produces = APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{checkInId}/cancel", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(NO_CONTENT)
     public Mono<Void> putCancel(
             @ApiParam(value = "Token de acesso.", required = true)

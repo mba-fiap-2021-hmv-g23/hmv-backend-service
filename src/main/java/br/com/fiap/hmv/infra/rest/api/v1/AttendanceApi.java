@@ -109,7 +109,7 @@ public class AttendanceApi {
     }
 
     @ApiOperation(value = "Iniciar atendimento ao paciente")
-    @PutMapping(path = "/{checkInId}/start-attendance")
+    @PutMapping(path = "/{checkInId}/start")
     @ResponseStatus(OK)
     public Mono<Void> putStartAttendance(
             @ApiParam(value = "Token de acesso.", required = true)
@@ -117,12 +117,12 @@ public class AttendanceApi {
             @ApiParam(value = "ID do Check-In.", required = true)
             @PathVariable() String checkInId
     ) {
-        log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start-attendance] Iniciando chamada ao app service " +
+        log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start] Iniciando chamada ao app service " +
                 "para iniciar atendimento ao paciente.");
         return appService.startAttendanceToPatient(checkInId, jwtService.getUserId(accessToken))
-                .doOnSuccess(u -> log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start-attendance] " +
+                .doOnSuccess(u -> log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start] " +
                         "Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start-attendance] " +
+                .doOnError(t -> log.error("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start] " +
                                 "Finalizado com erro [{}].",
                         t.getClass().getSimpleName()));
     }

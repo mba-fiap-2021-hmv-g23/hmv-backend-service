@@ -25,6 +25,9 @@ public class AttendanceServiceEntity {
     private String userTaxId;
     private LocalDateTime startDate;
 
+    @Indexed(name = "attendanceService.ticketWindow.unique-index", unique = true)
+    private String ticketWindow;
+
     @Indexed(name = "attendanceService.ttl.index", expireAfterSeconds = 0)
     private LocalDateTime endDate;
 
