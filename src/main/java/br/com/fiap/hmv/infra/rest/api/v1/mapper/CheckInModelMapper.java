@@ -2,6 +2,8 @@ package br.com.fiap.hmv.infra.rest.api.v1.mapper;
 
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.Patient;
+import br.com.fiap.hmv.domain.type.QuestionID;
+import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInFormResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PutCheckInResponse;
@@ -33,4 +35,13 @@ public class CheckInModelMapper {
                 .build();
     }
 
+    public static GetCheckInFormResponse toGetCheckInFormResponse(QuestionID questionID) {
+        return GetCheckInFormResponse.builder()
+                .questionId(questionID.name())
+                .questionTitle(questionID.getQuestionTitle())
+                .answerType(questionID.getAnswerType())
+                .options(questionID.getOptions())
+                .build();
+    }
+    
 }

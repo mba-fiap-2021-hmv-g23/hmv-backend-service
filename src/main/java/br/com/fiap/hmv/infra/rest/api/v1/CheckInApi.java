@@ -3,6 +3,7 @@ package br.com.fiap.hmv.infra.rest.api.v1;
 import br.com.fiap.hmv.application.service.CheckInAppService;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.infra.rest.api.v1.mapper.CheckInModelMapper;
+import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInFormResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PutCheckInResponse;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static br.com.fiap.hmv.infra.rest.api.v1.mapper.CheckInModelMapper.toCheckIn;
@@ -71,6 +74,23 @@ public class CheckInApi {
                         "Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/check-in/{checkInId}/confirm] " +
                                 "Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()));
+    }
+
+
+    @ApiOperation(value = "Obter formulário de Check-In", response = GetCheckInFormResponse[].class)
+    @GetMapping(path = "/form", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(OK)
+    public Flux<GetCheckInFormResponse> putConfirm(
+            @ApiParam(value = "Token de acesso.", required = true)
+            @RequestHeader("Authorization") String accessToken
+    ) {
+        log.info("[INFRA_REST_API /v1/check-in/form] Iniciando chamada ao app service para obter " +
+                "formulário de check-in.");
+        return appService.getForm(jwtService.getPatientId(accessToken))
+                .map(CheckInModelMapper::toGetCheckInFormResponse)
+                .doOnComplete(() -> log.info("[INFRA_REST_API POST /v1/check-in/form] Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/check-in/form] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()));
     }
 

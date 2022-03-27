@@ -4,13 +4,16 @@ import br.com.fiap.hmv.application.exception.HttpException;
 import br.com.fiap.hmv.application.port.CheckInPort;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.type.EstimatedTimeArrival;
+import br.com.fiap.hmv.domain.type.QuestionID;
 import br.com.fiap.hmv.domain.type.RiskClassification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static br.com.fiap.hmv.domain.service.RiskClassificationService.calculateRiskClassification;
 import static br.com.fiap.hmv.domain.type.EstimatedTimeArrival.ESTA_NO_LOCAL;
@@ -57,6 +60,10 @@ public class CheckInAppService {
                         "Aguarde que em breve você será chamado para atendimento.", BAD_REQUEST));
             }
         });
+    }
+
+    public Flux<QuestionID> getForm(String patientId) {
+        return Flux.fromStream(Arrays.stream(QuestionID.values()).sequential());
     }
 
 }
