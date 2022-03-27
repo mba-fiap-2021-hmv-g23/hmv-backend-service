@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.List;
 
 @ApiModel(value = "PostCheckInRequestV1")
 @Getter
@@ -15,6 +15,6 @@ public class PostCheckInRequest {
     private EstimatedTimeArrival estimatedTimeArrival;
 
     @ApiModelProperty(value = "Respostas do formulário de check-in.", required = true)
-    private Set<CheckInFormAnswerModel> formAnswers;
+    private List<CheckInFormAnswerModel> formAnswers;
 
 }

@@ -1,12 +1,15 @@
 package br.com.fiap.hmv.infra.rest.api.v1.mapper;
 
 import br.com.fiap.hmv.domain.entity.CheckIn;
+import br.com.fiap.hmv.domain.entity.CheckInQuestion;
 import br.com.fiap.hmv.domain.entity.Patient;
 import br.com.fiap.hmv.domain.type.QuestionID;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInFormResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PutCheckInResponse;
+
+import java.util.stream.Collectors;
 
 public class CheckInModelMapper {
 
@@ -16,6 +19,9 @@ public class CheckInModelMapper {
                         .patientId(patientId)
                         .build())
                 .estimatedTimeArrival(request.getEstimatedTimeArrival())
+                .formAnswers(request.getFormAnswers().stream().map(formAnswerModel -> CheckInQuestion.builder()
+                        .questionID(formAnswerModel.getQuestionId())
+                        .answer(formAnswerModel.getAnswer()).build()).collect(Collectors.toList()))
                 .build();
     }
 
@@ -43,5 +49,5 @@ public class CheckInModelMapper {
                 .options(questionID.getOptions())
                 .build();
     }
-    
+
 }

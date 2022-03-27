@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,6 +38,7 @@ public class CheckInEntity {
     private LocalDateTime reservedAttendantDate;
     private LocalDateTime cancellationDate;
     private String cancellationReason;
+    private List<CheckInQuestionEntity> formAnswers;
 
     @Indexed(name = "checkIn.ttl.index", expireAfterSeconds = 0)
     private LocalDateTime ttl;

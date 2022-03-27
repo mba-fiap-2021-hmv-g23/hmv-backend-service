@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,5 +29,6 @@ public class CheckIn {
     private LocalDateTime reservedAttendantDate;
     private LocalDateTime cancellationDate;
     private String cancellationReason;
+    private List<CheckInQuestion> formAnswers;
 
 }
