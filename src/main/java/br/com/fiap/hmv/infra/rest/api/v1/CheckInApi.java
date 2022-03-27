@@ -3,6 +3,7 @@ package br.com.fiap.hmv.infra.rest.api.v1;
 import br.com.fiap.hmv.application.service.CheckInAppService;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.infra.rest.api.v1.mapper.CheckInModelMapper;
+import br.com.fiap.hmv.infra.rest.api.v1.model.DeleteCheckInCancelRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInFormResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
@@ -27,6 +28,7 @@ import reactor.core.publisher.Mono;
 
 import static br.com.fiap.hmv.infra.rest.api.v1.mapper.CheckInModelMapper.toCheckIn;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -65,18 +67,39 @@ public class CheckInApi {
             @ApiParam(value = "Token de acesso.", required = true)
             @RequestHeader("Authorization") String accessToken,
             @ApiParam(value = "ID do Check-In.", required = true)
-            @PathVariable() String checkInId
+            @PathVariable String checkInId
     ) {
-        log.info("[INFRA_REST_API /v1/check-in/{checkInId}/confirm] Iniciando chamada ao app service para confirmar " +
+        log.info("[INFRA_REST_API PUT /v1/check-in/{checkInId}/confirm] Iniciando chamada ao app service para confirmar " +
                 "o check-in do paciente.");
         return appService.confirm(checkInId).map(CheckInModelMapper::toPutCheckInResponse)
-                .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/check-in/{checkInId}/confirm] " +
+                .doOnSuccess(u -> log.info("[INFRA_REST_API PUT /v1/check-in/{checkInId}/confirm] " +
                         "Finalizado com sucesso."))
-                .doOnError(t -> log.error("[INFRA_REST_API POST /v1/check-in/{checkInId}/confirm] " +
+                .doOnError(t -> log.error("[INFRA_REST_API PUT /v1/check-in/{checkInId}/confirm] " +
                                 "Finalizado com erro [{}].",
                         t.getClass().getSimpleName()));
     }
 
+    @ApiOperation(value = "Cancelar Check-in", response = PutCheckInResponse.class)
+    @PutMapping(path = "/{checkInId}/cancel", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(NO_CONTENT)
+    public Mono<Void> putCancel(
+            @ApiParam(value = "Token de acesso.", required = true)
+            @RequestHeader("Authorization") String accessToken,
+            @ApiParam(value = "ID do Check-In.", required = true)
+            @PathVariable String checkInId,
+            @ApiParam(value = "Dados para cancelar Check-In.", required = true)
+            @RequestBody DeleteCheckInCancelRequest request
+    ) {
+        log.info("[INFRA_REST_API DELETE /v1/check-in/{checkInId}/confirm] Iniciando chamada ao app service para " +
+                "cancelar o check-in do paciente.");
+        CheckIn checkIn = toCheckIn(checkInId, request);
+        return appService.cancel(checkIn)
+                .doOnSuccess(u -> log.info("[INFRA_REST_API DELETE /v1/check-in/{checkInId}/cancel] " +
+                        "Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API DELETE /v1/check-in/{checkInId}/cancel] " +
+                                "Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()));
+    }
 
     @ApiOperation(value = "Obter formulário de Check-In", response = GetCheckInFormResponse[].class)
     @GetMapping(path = "/form", produces = APPLICATION_JSON_VALUE)

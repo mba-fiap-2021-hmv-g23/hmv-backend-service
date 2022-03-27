@@ -62,6 +62,10 @@ public class CheckInAppService {
         });
     }
 
+    public Mono<Void> cancel(CheckIn checkIn) {
+        return Mono.empty();
+    }
+
     public Flux<QuestionID> getForm(String patientId) {
         return Flux.fromStream(Arrays.stream(QuestionID.values()).sequential());
     }

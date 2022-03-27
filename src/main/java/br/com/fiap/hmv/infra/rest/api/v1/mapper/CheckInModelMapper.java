@@ -4,6 +4,7 @@ import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.entity.CheckInQuestion;
 import br.com.fiap.hmv.domain.entity.Patient;
 import br.com.fiap.hmv.domain.type.QuestionID;
+import br.com.fiap.hmv.infra.rest.api.v1.model.DeleteCheckInCancelRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInFormResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
@@ -22,6 +23,13 @@ public class CheckInModelMapper {
                 .formAnswers(request.getFormAnswers().stream().map(formAnswerModel -> CheckInQuestion.builder()
                         .questionID(formAnswerModel.getQuestionId())
                         .answer(formAnswerModel.getAnswer()).build()).collect(Collectors.toList()))
+                .build();
+    }
+
+    public static CheckIn toCheckIn(String checkInId, DeleteCheckInCancelRequest request) {
+        return CheckIn.builder()
+                .checkInId(checkInId)
+                .cancellationReason(request.getReason())
                 .build();
     }
 

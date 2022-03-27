@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,7 +44,7 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API POST /v1/attendances/services] Iniciando chamada ao app service para " +
                 "inserir jornada de serviço à pacientes."
         );
-        return appService.startServiceToPatient(jwtService.getUserTaxId(accessToken))
+        return appService.startAttendanceService(jwtService.getUserTaxId(accessToken))
                 .doOnSuccess(u -> log.info("[INFRA_REST_API POST /v1/attendances/services] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API POST /v1/attendances/services] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
@@ -60,7 +62,7 @@ public class AttendanceApi {
         log.info("[INFRA_REST_API DELETE /v1/attendances/services] Iniciando chamada ao app service para " +
                 "remover jornada de serviço à pacientes."
         );
-        return appService.stopServiceToPatient(jwtService.getUserTaxId(accessToken))
+        return appService.stopAttendanceService(jwtService.getUserTaxId(accessToken))
                 .doOnSuccess(u -> log.info("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API DELETE /v1/attendances/services] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
@@ -104,6 +106,25 @@ public class AttendanceApi {
                 .doOnError(t -> log.error("[INFRA_REST_API GET /v1/attendances/next-patient] Finalizado com erro [{}].",
                         t.getClass().getSimpleName()
                 ));
+    }
+
+    @ApiOperation(value = "Iniciar atendimento ao paciente")
+    @PutMapping(path = "/{checkInId}/start-attendance")
+    @ResponseStatus(OK)
+    public Mono<Void> putStartAttendance(
+            @ApiParam(value = "Token de acesso.", required = true)
+            @RequestHeader("Authorization") String accessToken,
+            @ApiParam(value = "ID do Check-In.", required = true)
+            @PathVariable() String checkInId
+    ) {
+        log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start-attendance] Iniciando chamada ao app service " +
+                "para iniciar atendimento ao paciente.");
+        return appService.startAttendanceToPatient(checkInId, jwtService.getUserId(accessToken))
+                .doOnSuccess(u -> log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start-attendance] " +
+                        "Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start-attendance] " +
+                                "Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()));
     }
 
 }

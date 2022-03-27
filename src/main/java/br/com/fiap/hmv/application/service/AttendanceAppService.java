@@ -26,12 +26,12 @@ public class AttendanceAppService {
     private final CheckInPort checkInPort;
     private final PatientPort patientPort;
 
-    public Mono<Void> startServiceToPatient(String userTaxId) {
+    public Mono<Void> startAttendanceService(String userTaxId) {
         log.info("[APPLICATION_SERVICE] Iniciando jornada do usuário de atendimento à pacientes.");
         return attendancePort.startServiceToPatient(userTaxId);
     }
 
-    public Mono<Void> stopServiceToPatient(String userTaxId) {
+    public Mono<Void> stopAttendanceService(String userTaxId) {
         log.info("[APPLICATION_SERVICE] Encerrando jornada do usuário de atendimento à pacientes.");
         return attendancePort.stopServiceToPatient(userTaxId);
     }
@@ -71,6 +71,10 @@ public class AttendanceAppService {
                 .flatMap(this::buildAttendanceQueueCalls);
     }
 
+    public Mono<Void> startAttendanceToPatient(String checkInId, String userId) {
+        return Mono.empty();
+    }
+
     private Mono<AttendanceQueueCalls> buildAttendanceQueueCalls(List<CheckIn> awaitingAttendanceList) {
         return Mono.just(AttendanceQueueCalls.builder()
                 .inCall(awaitingAttendanceList.stream()
@@ -98,5 +102,5 @@ public class AttendanceAppService {
     private boolean filterAwaitingCall(CheckIn checkIn) {
         return checkIn.getCalls() == 0;
     }
-
+    
 }
