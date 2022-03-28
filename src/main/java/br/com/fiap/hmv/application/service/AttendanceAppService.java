@@ -69,7 +69,13 @@ public class AttendanceAppService {
     }
 
     public Mono<Void> startAttendanceToPatient(String checkInId, String attendantId) {
-        return Mono.empty();
+        log.info("[APPLICATION_SERVICE] Iniciando atendimento à pacientes.");
+        return attendancePort.findByAttendantId(attendantId)
+                .flatMap(attendanceService -> checkInPort.findById(checkInId).flatMap(checkIn -> {
+                    checkIn.setAttendant(attendanceService.getAttendant());
+                    checkIn.setServiceDesk(attendanceService.getServiceDesk());
+                    return checkInPort.startAttendanceToPatient(checkIn);
+                }));
     }
 
     private Mono<AttendanceQueueCalls> buildAttendanceQueueCalls(List<CheckIn> awaitingAttendanceList) {

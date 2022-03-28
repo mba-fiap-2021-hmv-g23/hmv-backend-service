@@ -68,7 +68,39 @@ public class CheckInAdapter implements CheckInPort {
     }
 
     @Override
-    public Mono<CheckIn> getById(String checkInId) {
+    public Mono<Void> updateStartAttendance(CheckIn checkIn) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando atualização da chamada ao paciente à atendimento.");
+        return mongoOperations.findAndModify(
+                query(where("_id").is(checkIn.getCheckInId())),
+                new Update()
+                        .set("calls", checkIn.getCalls())
+                        .set("noShows", checkIn.getNoShows())
+                        .set("lastCallDate", checkIn.getLastCallDate())
+                        .set("attendantId", checkIn.getAttendant().getUserId())
+                        .set("attendantFullName", checkIn.getAttendant().getFullName())
+                        .set("serviceDesk", checkIn.getServiceDesk())
+                        .set("serviceStartBaseDate", checkIn.getServiceStartBaseDate())
+                        .set("reservedAttendantDate", checkIn.getReservedAttendantDate()),
+                CheckInEntity.class
+        ).then();
+    }
+
+    @Override
+    public Mono<Void> startAttendanceToPatient(CheckIn checkIn) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando atualização do responsável pelo atendimento.");
+        return mongoOperations.findAndModify(
+                query(where("_id").is(checkIn.getCheckInId())),
+                new Update()
+                        .set("attendantId", checkIn.getAttendant().getUserId())
+                        .set("attendantFullName", checkIn.getAttendant().getFullName())
+                        .set("serviceStartDate", now()),
+                CheckInEntity.class
+        ).then();
+    }
+
+    @Override
+    public Mono<CheckIn> findById(String checkInId) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do check-in por ID.");
         return checkInRepository.findById(checkInId).map(CheckInEntityMapper::toCheckIn);
     }
 
@@ -83,27 +115,6 @@ public class CheckInAdapter implements CheckInPort {
                 ).with(Sort.by("serviceStartBaseDate")).limit(1),
                 CheckInEntity.class
         ).map(CheckInEntityMapper::toCheckIn);
-    }
-
-
-    private String attendantFullName;
-    private String serviceDesk;
-
-    @Override
-    public Mono<Void> updateStartAttendance(CheckIn checkIn) {
-        return mongoOperations.findAndModify(
-                query(where("_id").is(checkIn.getCheckInId())),
-                new Update()
-                        .set("calls", checkIn.getCalls())
-                        .set("noShows", checkIn.getNoShows())
-                        .set("lastCallDate", checkIn.getLastCallDate())
-                        .set("attendantId", checkIn.getAttendant().getUserId())
-                        .set("attendantFullName", checkIn.getAttendant().getFullName())
-                        .set("serviceDesk", checkIn.getServiceDesk())
-                        .set("serviceStartBaseDate", checkIn.getServiceStartBaseDate())
-                        .set("reservedAttendantDate", checkIn.getReservedAttendantDate()),
-                CheckInEntity.class
-        ).then();
     }
 
     @Override

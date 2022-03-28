@@ -10,11 +10,13 @@ public interface CheckInPort {
 
     Mono<Void> update(final CheckIn checkIn);
 
-    Mono<CheckIn> getById(String checkInId);
+    Mono<Void> updateStartAttendance(CheckIn checkIn);
+
+    Mono<Void> startAttendanceToPatient(CheckIn checkIn);
+
+    Mono<CheckIn> findById(String checkInId);
 
     Mono<CheckIn> findNextAwaitingAttendance(String attendanceId);
-
-    Mono<Void> updateStartAttendance(CheckIn checkIn);
 
     Flux<CheckIn> findAwaitingAttendance();
 

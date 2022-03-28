@@ -119,7 +119,7 @@ public class AttendanceApi {
             @ApiParam(value = "Token de acesso.", required = true)
             @RequestHeader("Authorization") String accessToken,
             @ApiParam(value = "ID do Check-In.", required = true)
-            @PathVariable() String checkInId
+            @PathVariable String checkInId
     ) {
         log.info("[INFRA_REST_API PUT /v1/attendances/{checkInId}/start] Iniciando chamada ao app service " +
                 "para iniciar atendimento ao paciente.");

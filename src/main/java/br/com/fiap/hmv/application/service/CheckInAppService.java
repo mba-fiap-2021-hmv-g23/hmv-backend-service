@@ -49,7 +49,7 @@ public class CheckInAppService {
 
     public Mono<CheckIn> confirm(String checkInId) {
         log.info("[APPLICATION_SERVICE] Iniciando confirmação do check-in do paciente.");
-        return checkInPort.getById(checkInId).flatMap(checkIn -> {
+        return checkInPort.findById(checkInId).flatMap(checkIn -> {
             if (checkIn.getEstimatedTimeArrival() != ESTA_NO_LOCAL) {
                 LocalDateTime now = now();
                 RiskClassification riskClassification = checkIn.getRiskClassification();
