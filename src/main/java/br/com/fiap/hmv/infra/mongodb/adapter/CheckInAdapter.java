@@ -85,6 +85,10 @@ public class CheckInAdapter implements CheckInPort {
         ).map(CheckInEntityMapper::toCheckIn);
     }
 
+
+    private String attendantFullName;
+    private String serviceDesk;
+
     @Override
     public Mono<Void> updateStartAttendance(CheckIn checkIn) {
         return mongoOperations.findAndModify(
@@ -94,6 +98,8 @@ public class CheckInAdapter implements CheckInPort {
                         .set("noShows", checkIn.getNoShows())
                         .set("lastCallDate", checkIn.getLastCallDate())
                         .set("attendantId", checkIn.getAttendant().getUserId())
+                        .set("attendantFullName", checkIn.getAttendant().getFullName())
+                        .set("serviceDesk", checkIn.getServiceDesk())
                         .set("serviceStartBaseDate", checkIn.getServiceStartBaseDate())
                         .set("reservedAttendantDate", checkIn.getReservedAttendantDate()),
                 CheckInEntity.class

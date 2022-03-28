@@ -25,17 +25,17 @@ public class GetAttendanceNextPatientResponse {
     private String patientTaxId;
 
     @ApiModelProperty(value = "Nome completo do paciente.", required = true)
-    private String fullName;
+    private String patientFullName;
 
     @ApiModelProperty(value = "Sexo do paciente.", required = true)
-    private Genre genre;
+    private Genre patientGenre;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "Data de nascimento do paciente.", required = true)
-    private LocalDate birthDate;
+    private LocalDate patientBirthDate;
 
     @ApiModelProperty(value = "Idade do paciente.", required = true)
-    private String age;
+    private String patientAge;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "Data de check-in.", required = true)
@@ -44,6 +44,12 @@ public class GetAttendanceNextPatientResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "Data de expiração do Check-In.", required = true)
     private LocalDateTime expiresDate;
+
+    @ApiModelProperty(value = "Nome completo do atendente.")
+    private String attendantFullName;
+
+    @ApiModelProperty(value = "Balcão de atendimento.")
+    private String serviceDesk;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "Data da última chamada do paciente à atendimento.")

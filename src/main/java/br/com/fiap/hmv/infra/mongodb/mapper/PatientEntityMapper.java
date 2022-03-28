@@ -11,7 +11,7 @@ public class PatientEntityMapper {
     public static PatientEntity toPatientEntity(Patient patient) {
         return PatientEntity.builder()
                 .patientId(patient.getPatientId())
-                .taxId(patient.getTaxId())
+                .taxId(patient.getPatientTaxId())
                 .fullName(patient.getFullName())
                 .birthDate(patient.getBirthDate())
                 .genre(patient.getGenre())
@@ -27,7 +27,7 @@ public class PatientEntityMapper {
     public static Patient toPatient(PatientEntity entity) {
         return Patient.builder()
                 .patientId(entity.getPatientId())
-                .taxId(entity.getTaxId())
+                .patientTaxId(entity.getTaxId())
                 .fullName(entity.getFullName())
                 .birthDate(entity.getBirthDate())
                 .genre(entity.getGenre())

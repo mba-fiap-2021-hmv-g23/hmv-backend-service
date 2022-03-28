@@ -8,7 +8,7 @@ public interface PatientPort {
 
     Mono<Void> insert(final Patient patient);
 
-    Mono<Patient> get(String patientId);
+    Mono<Patient> findById(String patientId);
 
     Mono<Patient> getByTaxId(String patientTaxId);
 

@@ -1,6 +1,7 @@
 package br.com.fiap.hmv.infra.mongodb.entity;
 
 import br.com.fiap.hmv.domain.type.EstimatedTimeArrival;
+import br.com.fiap.hmv.domain.type.Genre;
 import br.com.fiap.hmv.domain.type.RiskClassification;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +27,14 @@ public class CheckInEntity {
     @Id
     private String checkInId;
     private String patientId;
+    private String patientTaxId;
+    private String patientFullName;
+    private String patientPhone;
+    private LocalDate patientBirthDate;
+    private Genre patientGenre;
     private String attendantId;
+    private String attendantFullName;
+    private String serviceDesk;
     private Integer calls;
     private Integer noShows;
     private EstimatedTimeArrival estimatedTimeArrival;

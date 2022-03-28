@@ -17,6 +17,7 @@ public class CheckIn {
     private String checkInId;
     private Patient patient;
     private User attendant;
+    private String serviceDesk;
     private Integer calls;
     private Integer noShows;
     private EstimatedTimeArrival estimatedTimeArrival;

@@ -28,7 +28,7 @@ public class PatientAdapter implements PatientPort {
     }
 
     @Override
-    public Mono<Patient> get(String patientId) {
+    public Mono<Patient> findById(String patientId) {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca do usuário na base de dados.");
         return patientRepository.findById(patientId).map(PatientEntityMapper::toPatient);
     }

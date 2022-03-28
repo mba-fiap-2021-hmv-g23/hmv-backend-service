@@ -2,12 +2,10 @@ package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.port.AttendancePort;
 import br.com.fiap.hmv.application.port.CheckInPort;
-import br.com.fiap.hmv.application.port.PatientPort;
 import br.com.fiap.hmv.application.port.UserPort;
 import br.com.fiap.hmv.domain.entity.AttendanceQueueCalls;
 import br.com.fiap.hmv.domain.entity.AttendanceService;
 import br.com.fiap.hmv.domain.entity.CheckIn;
-import br.com.fiap.hmv.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ public class AttendanceAppService {
     private final AttendancePort attendancePort;
     private final CheckInPort checkInPort;
     private final UserPort userPort;
-    private final PatientPort patientPort;
 
     public Mono<Void> startAttendanceService(String serviceDesk, String attendantId) {
         log.info("[APPLICATION_SERVICE] Iniciando jornada do usuário de atendimento à pacientes.");
@@ -38,47 +35,40 @@ public class AttendanceAppService {
                         .build())).then();
     }
 
-    public Mono<Void> stopAttendanceService(String attendanceId) {
+    public Mono<Void> stopAttendanceService(String attendantId) {
         log.info("[APPLICATION_SERVICE] Encerrando jornada do usuário de atendimento à pacientes.");
-        return attendancePort.stopAttendanceService(attendanceId);
+        return attendancePort.stopAttendanceService(attendantId);
     }
 
-    public Mono<CheckIn> nextPatientToAttendance(String userId) {
+    public Mono<CheckIn> nextPatientToAttendance(String attendantId) {
         log.info("[APPLICATION_SERVICE] Iniciando chamada ao próximo paciente aguardando atendimento.");
-        return checkInPort.findNextAwaitingAttendance(userId).flatMap(checkIn -> {
-            checkIn.setAttendant(User.builder().userId(userId).build());
-            if (checkIn.getCalls() == 3) {
-                checkIn.setCalls(0);
-                checkIn.setNoShows(checkIn.getNoShows() + 1);
-                checkIn.setServiceStartBaseDate(checkIn.getServiceStartBaseDate().plusMinutes(checkIn.getNoShows()));
-                checkIn.setReservedAttendantDate(now());
-                return checkInPort.updateStartAttendance(checkIn).thenReturn(checkIn)
-                        .flatMap(u -> nextPatientToAttendance(userId));
-            } else {
-                checkIn.setReservedAttendantDate(now().plusSeconds(60));
-                checkIn.setCalls(checkIn.getCalls() + 1);
-                checkIn.setLastCallDate(now());
-                return checkInPort.updateStartAttendance(checkIn).thenReturn(checkIn);
-            }
-        }).flatMap(checkIn -> patientPort.get(checkIn.getPatient().getPatientId()).flatMap(patient -> {
-            checkIn.setPatient(patient);
-            return Mono.just(checkIn);
-        }));
+        return attendancePort.findByAttendantId(attendantId)
+                .flatMap(attendanceService -> checkInPort.findNextAwaitingAttendance(attendantId).flatMap(checkIn -> {
+                    checkIn.setAttendant(attendanceService.getAttendant());
+                    checkIn.setServiceDesk(attendanceService.getServiceDesk());
+                    if (checkIn.getCalls() == 3) {
+                        checkIn.setCalls(0);
+                        checkIn.setNoShows(checkIn.getNoShows() + 1);
+                        checkIn.setServiceStartBaseDate(checkIn.getServiceStartBaseDate()
+                                .plusMinutes(checkIn.getNoShows()));
+                        checkIn.setReservedAttendantDate(now());
+                        return checkInPort.updateStartAttendance(checkIn).thenReturn(checkIn)
+                                .flatMap(u -> nextPatientToAttendance(attendantId));
+                    } else {
+                        checkIn.setReservedAttendantDate(now().plusSeconds(60));
+                        checkIn.setCalls(checkIn.getCalls() + 1);
+                        checkIn.setLastCallDate(now());
+                        return checkInPort.updateStartAttendance(checkIn).thenReturn(checkIn);
+                    }
+                }));
     }
 
     public Mono<AttendanceQueueCalls> findQueueCalls() {
         log.info("[APPLICATION_SERVICE] Iniciando busca da fila de atendimentos à pacientes.");
-        return checkInPort.findAwaitingAttendance()
-                .flatMap(checkIn -> patientPort.get(
-                        checkIn.getPatient().getPatientId()
-                ).flatMap(patient -> {
-                    checkIn.setPatient(patient);
-                    return Mono.just(checkIn);
-                })).collectList()
-                .flatMap(this::buildAttendanceQueueCalls);
+        return checkInPort.findAwaitingAttendance().collectList().flatMap(this::buildAttendanceQueueCalls);
     }
 
-    public Mono<Void> startAttendanceToPatient(String checkInId, String userId) {
+    public Mono<Void> startAttendanceToPatient(String checkInId, String attendantId) {
         return Mono.empty();
     }
 

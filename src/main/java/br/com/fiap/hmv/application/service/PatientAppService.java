@@ -22,7 +22,7 @@ public class PatientAppService {
 
     public Mono<Patient> search(String patientId) {
         log.info("[APPLICATION_SERVICE] Iniciando a busca do paciente");
-        return patientPort.get(patientId);
+        return patientPort.findById(patientId);
     }
 
     public Flux<Patient> search() {

@@ -8,4 +8,6 @@ public interface AttendanceServiceRepository extends ReactiveMongoRepository<Att
 
     Mono<Void> deleteByAttendantId(String attendantId);
 
+    Mono<AttendanceServiceEntity> findByAttendantId(String attendantId);
+
 }

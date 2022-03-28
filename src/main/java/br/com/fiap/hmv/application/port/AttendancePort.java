@@ -7,6 +7,8 @@ public interface AttendancePort {
 
     Mono<Void> startAttendanceService(AttendanceService attendanceService);
 
-    Mono<Void> stopAttendanceService(String attendanceId);
+    Mono<Void> stopAttendanceService(String attendantId);
+
+    Mono<AttendanceService> findByAttendantId(String attendantId);
 
 }

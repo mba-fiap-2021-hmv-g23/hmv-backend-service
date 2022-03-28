@@ -12,7 +12,7 @@ public class PatientModelMapper {
 
     public static Patient toPatient(PostPatientRequest request) {
         return Patient.builder()
-                .taxId(request.getTaxId())
+                .patientTaxId(request.getTaxId())
                 .fullName(request.getFullName())
                 .genre(request.getGenre())
                 .email(request.getEmail())
@@ -34,7 +34,7 @@ public class PatientModelMapper {
     public static GetPatientResponse toGetPatientResponse(Patient patient) {
         return GetPatientResponse.builder()
                 .patientId(patient.getPatientId())
-                .taxId(patient.getTaxId())
+                .taxId(patient.getPatientTaxId())
                 .fullName(patient.getFullName())
                 .genre(patient.getGenre())
                 .email(patient.getEmail())

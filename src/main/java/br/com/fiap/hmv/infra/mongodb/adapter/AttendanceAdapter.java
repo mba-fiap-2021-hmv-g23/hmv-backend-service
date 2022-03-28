@@ -2,6 +2,7 @@ package br.com.fiap.hmv.infra.mongodb.adapter;
 
 import br.com.fiap.hmv.application.port.AttendancePort;
 import br.com.fiap.hmv.domain.entity.AttendanceService;
+import br.com.fiap.hmv.domain.entity.User;
 import br.com.fiap.hmv.infra.mongodb.entity.AttendanceServiceEntity;
 import br.com.fiap.hmv.infra.mongodb.repository.AttendanceServiceRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,17 @@ public class AttendanceAdapter implements AttendancePort {
         log.info("[INFRA_MONGODB_ADAPTER] Iniciando atualização de encerramento de serviço de atendimento " +
                 "na base de dados.");
         return attendanceServiceRepository.deleteByAttendantId(attendantId);
+    }
+
+    @Override
+    public Mono<AttendanceService> findByAttendantId(String attendantId) {
+        log.info("[INFRA_MONGODB_ADAPTER] Iniciando busca ao dados de serviço por ID do atendente.");
+        return attendanceServiceRepository.findByAttendantId(attendantId).map(entity -> AttendanceService.builder()
+                .serviceDesk(entity.getServiceDesk())
+                .attendant(User.builder()
+                        .userId(entity.getAttendantId())
+                        .fullName(entity.getAttendantFullName())
+                        .build()).build());
     }
 
 }

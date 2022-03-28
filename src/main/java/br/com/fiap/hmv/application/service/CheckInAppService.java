@@ -2,6 +2,7 @@ package br.com.fiap.hmv.application.service;
 
 import br.com.fiap.hmv.application.exception.HttpException;
 import br.com.fiap.hmv.application.port.CheckInPort;
+import br.com.fiap.hmv.application.port.PatientPort;
 import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.domain.type.EstimatedTimeArrival;
 import br.com.fiap.hmv.domain.type.QuestionID;
@@ -27,19 +28,23 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class CheckInAppService {
 
     private final CheckInPort checkInPort;
+    private final PatientPort patientPort;
 
     public Mono<Void> checkIn(final CheckIn checkIn) {
         log.info("[APPLICATION_SERVICE] Iniciando check-in do paciente.");
-        LocalDateTime now = now();
-        RiskClassification riskClassification = calculateRiskClassification();
-        checkIn.setRiskClassification(riskClassification);
-        checkIn.setServiceStartBaseDate(now
-                .plus(riskClassification.getMinutes(), MINUTES)
-                .plus(checkIn.getEstimatedTimeArrival().getMinutes(), MINUTES));
-        checkIn.setInclusionDate(now);
-        checkIn.setCalls(0);
-        checkIn.setNoShows(0);
-        return checkInPort.insert(checkIn);
+        return patientPort.findById(checkIn.getPatient().getPatientId()).flatMap(patient -> {
+            LocalDateTime now = now();
+            RiskClassification riskClassification = calculateRiskClassification();
+            checkIn.setPatient(patient);
+            checkIn.setRiskClassification(riskClassification);
+            checkIn.setServiceStartBaseDate(now
+                    .plus(riskClassification.getMinutes(), MINUTES)
+                    .plus(checkIn.getEstimatedTimeArrival().getMinutes(), MINUTES));
+            checkIn.setInclusionDate(now);
+            checkIn.setCalls(0);
+            checkIn.setNoShows(0);
+            return checkInPort.insert(checkIn);
+        });
     }
 
     public Mono<CheckIn> confirm(String checkInId) {

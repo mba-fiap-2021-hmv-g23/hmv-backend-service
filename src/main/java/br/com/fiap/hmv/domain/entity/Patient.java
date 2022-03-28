@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class Patient {
 
     private String patientId;
-    private String taxId;
+    private String patientTaxId;
     private String fullName;
     private String phone;
     private LocalDate birthDate;

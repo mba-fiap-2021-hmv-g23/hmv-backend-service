@@ -7,6 +7,7 @@ import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceNextPatientResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetAttendanceQueueCallsResponse;
 
 import static br.com.fiap.hmv.infra.rest.api.v1.mapper.AgeMapper.getTextAge;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 public class AttendanceModelMapper {
@@ -15,13 +16,15 @@ public class AttendanceModelMapper {
         return GetAttendanceNextPatientResponse.builder()
                 .checkInId(checkIn.getCheckInId())
                 .patientId(checkIn.getPatient().getPatientId())
-                .patientTaxId(checkIn.getPatient().getTaxId())
-                .fullName(checkIn.getPatient().getFullName())
-                .birthDate(checkIn.getPatient().getBirthDate())
-                .age(getTextAge(checkIn.getPatient().getBirthDate()))
-                .genre(checkIn.getPatient().getGenre())
+                .patientTaxId(checkIn.getPatient().getPatientTaxId())
+                .patientFullName(checkIn.getPatient().getFullName())
+                .patientBirthDate(checkIn.getPatient().getBirthDate())
+                .patientAge(getTextAge(checkIn.getPatient().getBirthDate()))
+                .patientGenre(checkIn.getPatient().getGenre())
                 .checkInDate(checkIn.getInclusionDate())
                 .expiresDate(checkIn.getExpiresDate())
+                .attendantFullName(nonNull(checkIn.getAttendant()) ? checkIn.getAttendant().getFullName() : null)
+                .serviceDesk(checkIn.getServiceDesk())
                 .lastCallDate(checkIn.getLastCallDate())
                 .build();
     }
@@ -45,11 +48,13 @@ public class AttendanceModelMapper {
     private static AttendanceCallModel toAttendanceCallModel(CheckIn checkIn) {
         return AttendanceCallModel.builder()
                 .checkInId(checkIn.getCheckInId())
-                .fullName(checkIn.getPatient().getFullName())
-                .age(getTextAge(checkIn.getPatient().getBirthDate()))
-                .genre(checkIn.getPatient().getGenre())
+                .patientFullName(checkIn.getPatient().getFullName())
+                .patientAge(getTextAge(checkIn.getPatient().getBirthDate()))
+                .patientGenre(checkIn.getPatient().getGenre())
                 .riskClassification(checkIn.getRiskClassification())
                 .lastCallDate(checkIn.getLastCallDate())
+                .attendantFullName(nonNull(checkIn.getAttendant()) ? checkIn.getAttendant().getFullName() : null)
+                .serviceDesk(checkIn.getServiceDesk())
                 .build();
     }
 
