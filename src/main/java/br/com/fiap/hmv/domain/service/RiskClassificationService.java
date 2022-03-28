@@ -8,8 +8,7 @@ public class RiskClassificationService {
 
     public static RiskClassification calculateRiskClassification() {
         int index = new Random().nextInt(RiskClassification.values().length);
-//        return RiskClassification.values()[index];
-        return RiskClassification.EMERGENCIA;
+        return RiskClassification.values()[index];
     }
 
 }

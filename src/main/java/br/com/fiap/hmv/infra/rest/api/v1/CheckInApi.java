@@ -5,6 +5,7 @@ import br.com.fiap.hmv.domain.entity.CheckIn;
 import br.com.fiap.hmv.infra.rest.api.v1.mapper.CheckInModelMapper;
 import br.com.fiap.hmv.infra.rest.api.v1.model.DeleteCheckInCancelRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInFormResponse;
+import br.com.fiap.hmv.infra.rest.api.v1.model.GetCheckInResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInRequest;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PostCheckInResponse;
 import br.com.fiap.hmv.infra.rest.api.v1.model.PutCheckInResponse;
@@ -98,6 +99,25 @@ public class CheckInApi {
                 .doOnSuccess(u -> log.info("[INFRA_REST_API DELETE /v1/check-in/{checkInId}/cancel] " +
                         "Finalizado com sucesso."))
                 .doOnError(t -> log.error("[INFRA_REST_API DELETE /v1/check-in/{checkInId}/cancel] " +
+                                "Finalizado com erro [{}].",
+                        t.getClass().getSimpleName()));
+    }
+
+    @ApiOperation(value = "Obter dados completo do Check-in", response = PutCheckInResponse.class)
+    @GetMapping(path = "/{checkInId}", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(OK)
+    public Mono<GetCheckInResponse> get(
+            @ApiParam(value = "Token de acesso.", required = true)
+            @RequestHeader("Authorization") String accessToken,
+            @ApiParam(value = "ID do Check-In.", required = true)
+            @PathVariable String checkInId
+    ) {
+        log.info("[INFRA_REST_API GET /v1/check-in/{checkInId}] Iniciando chamada ao app service para confirmar " +
+                "o check-in do paciente.");
+        return appService.findById(checkInId).map(CheckInModelMapper::toGetCheckInResponse)
+                .doOnSuccess(u -> log.info("[INFRA_REST_API GET /v1/check-in/{checkInId}] " +
+                        "Finalizado com sucesso."))
+                .doOnError(t -> log.error("[INFRA_REST_API GET /v1/check-in/{checkInId}] " +
                                 "Finalizado com erro [{}].",
                         t.getClass().getSimpleName()));
     }

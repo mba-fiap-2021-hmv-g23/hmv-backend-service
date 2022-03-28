@@ -91,6 +91,7 @@ public class CheckInAdapter implements CheckInPort {
         return mongoOperations.findAndModify(
                 query(where("_id").is(checkIn.getCheckInId())),
                 new Update()
+                        .set("estimatedTimeArrival", checkIn.getEstimatedTimeArrival())
                         .set("attendantId", checkIn.getAttendant().getUserId())
                         .set("attendantFullName", checkIn.getAttendant().getFullName())
                         .set("serviceStartDate", now()),

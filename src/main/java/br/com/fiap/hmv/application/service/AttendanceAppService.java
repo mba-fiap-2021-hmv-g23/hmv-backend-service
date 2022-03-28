@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static br.com.fiap.hmv.domain.type.EstimatedTimeArrival.ESTA_NO_LOCAL;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -72,6 +73,7 @@ public class AttendanceAppService {
         log.info("[APPLICATION_SERVICE] Iniciando atendimento à pacientes.");
         return attendancePort.findByAttendantId(attendantId)
                 .flatMap(attendanceService -> checkInPort.findById(checkInId).flatMap(checkIn -> {
+                    checkIn.setEstimatedTimeArrival(ESTA_NO_LOCAL);
                     checkIn.setAttendant(attendanceService.getAttendant());
                     checkIn.setServiceDesk(attendanceService.getServiceDesk());
                     return checkInPort.startAttendanceToPatient(checkIn);

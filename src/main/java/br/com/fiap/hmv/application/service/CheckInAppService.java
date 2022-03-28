@@ -71,6 +71,11 @@ public class CheckInAppService {
         return Mono.empty();
     }
 
+    public Mono<CheckIn> findById(String checkInId) {
+        log.info("[APPLICATION_SERVICE] Iniciando busca de check-in por ID.");
+        return checkInPort.findById(checkInId);
+    }
+
     public Flux<QuestionID> getForm(String patientId) {
         return Flux.fromStream(Arrays.stream(QuestionID.values()).sequential());
     }
